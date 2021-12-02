@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gowallpaper/background.dart';
 import 'package:provider/provider.dart';
 import 'package:gowallpaper/bloc/theme.dart';
 
@@ -44,95 +45,79 @@ class StreamStart extends StatelessWidget {
 class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/career2.jpeg"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Image.asset('assets/career2.jpeg').color,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: ListTile(
-            trailing: Icon(
-              Icons.clear_all,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Ashisu Mobile",
-                  style: TextStyle(
-                      color: Color(0xFFFFD119),
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Daily Assistance",
-                  style: TextStyle(
-                      color: Color(0xFFFFD119),
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      "WE'LL BE THERE FOR YOU",
-                      style: TextStyle(
-                          color: Colors.grey[100],
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Image.asset(
-                  "assets/carmovingcolor.gif",
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(23.0),
-                      color: Color(0xFFFFD119)),
-                  height: 50,
-                  width: (MediaQuery.of(context).size.width) - 5,
-                  child: RaisedButton(
-                    elevation: 0,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        //MaterialPageRoute(builder: (context) => SelectPage()),
-                        MaterialPageRoute(builder: (context) => StreamStart()),
-                      );
-                    },
-                    color: Colors.transparent,
-                    child: Text(
-                      "Get Started",
-                      style: TextStyle(
-                          color: Color(0xFF5C0B68),
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
+    return Background(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Ashisu Mobile",
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: Color(0xFFBA68D8),
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Daily Assistance",
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: Color(0xFFFFD119),
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.grey,
+                  ),
+                  Text(
+                    "WE'LL BE THERE FOR YOU",
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: Colors.grey[100],
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Image.asset(
+                "assets/carmovingcolor.gif",
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(23.0),
+                    color: Color(0xFFFFD119)),
+                height: 50,
+                width: (MediaQuery.of(context).size.width) - 5,
+                child: RaisedButton(
+                  elevation: 0,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      //MaterialPageRoute(builder: (context) => SelectPage()),
+                      MaterialPageRoute(builder: (context) => StreamStart()),
+                    );
+                  },
+                  color: Colors.transparent,
+                  child: Text(
+                    "Get Started",
+                    style: TextStyle(
+                        color: Color(0xFF5C0B68),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
