@@ -53,23 +53,23 @@ class MyPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Ashisu Mobile",
+                "Welcome To",
                 style: TextStyle(
                     decoration: TextDecoration.none,
-                    color: Color(0xFFBA68D8),
+                    color: Colors.purple[300],
                     fontSize: 35,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                "Daily Assistance",
+                "Ashisu Mobile",
                 style: TextStyle(
                     decoration: TextDecoration.none,
-                    color: Color(0xFFFFD119),
+                    color: Colors.green[400],
                     fontSize: 35,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 5,
+                height: 10,
               ),
               Row(
                 children: <Widget>[
@@ -78,24 +78,30 @@ class MyPage extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   Text(
-                    "WE'LL BE THERE FOR YOU",
+                    "Seize The Moment",
                     style: TextStyle(
                         decoration: TextDecoration.none,
                         color: Colors.grey[100],
-                        fontSize: 15,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
+              SizedBox(
+                height: 30,
+              ),
               Image.asset(
-                "assets/carmovingcolor.gif",
+                "assets/time.gif",
                 fit: BoxFit.cover,
                 width: double.infinity,
+              ),
+              SizedBox(
+                height: 30,
               ),
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(23.0),
-                    color: Color(0xFFFFD119)),
+                    color: Color(0xFF4DB6AC)),
                 height: 50,
                 width: (MediaQuery.of(context).size.width) - 5,
                 child: RaisedButton(
@@ -111,7 +117,7 @@ class MyPage extends StatelessWidget {
                   child: Text(
                     "Get Started",
                     style: TextStyle(
-                        color: Color(0xFF5C0B68),
+                        color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold),
                   ),

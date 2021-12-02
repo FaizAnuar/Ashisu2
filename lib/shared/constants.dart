@@ -8,8 +8,8 @@ const textInputDecoration = InputDecoration(
     focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey, width: 2)));
 
-const kPrimaryColor = Color(0xFF6F35A5);
-const kPrimaryLightColor = Color(0xFFF1E6FF);
+const kPrimaryColor = Color(0xFFBA68D8);
+const kPrimaryLightColor = Color(0xFF4DB6AC);
 
 showAlertDialog(BuildContext context, String msg, String msg2) {
   String passMsg = msg;
