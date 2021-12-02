@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "105725900310",
+    "project_id": "ashisu-prototype-83776",
+    "storage_bucket": "ashisu-prototype-83776.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105725900310:android:fbe2ec05ba367863b46737",
+        "android_client_info": {
+          "package_name": "com.faiz.ashisu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105725900310-esmsvmam2rbo1fm25o45rsji0lu7m8lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtf-ngF3dAo7jYHaZopSD1qI-0r0p9wG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105725900310-esmsvmam2rbo1fm25o45rsji0lu7m8lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
