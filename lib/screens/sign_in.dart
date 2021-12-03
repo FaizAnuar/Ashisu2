@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Color(0xFF5C0B68),
+            backgroundColor: Colors.amber[50],
             body: Container(
                 height: double.infinity,
                 decoration: BoxDecoration(
@@ -36,7 +36,6 @@ class _SignInState extends State<SignIn> {
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
                 child: Stack(
                   children: <Widget>[
-                    
                     Form(
                       key: _formKey,
                       child: SingleChildScrollView(
@@ -46,22 +45,27 @@ class _SignInState extends State<SignIn> {
                             RichText(
                               text: TextSpan(children: <TextSpan>[
                                 TextSpan(
-                                    text: "CAR",
+                                    text: "ASI",
                                     style: TextStyle(
-                                        color: Color(0xffFFD119),
+                                        color: kPrimaryColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 50,
                                         fontFamily: 'Bebas')),
                                 TextSpan(
-                                    text: "OSAK",
+                                    text: "SU",
                                     style: TextStyle(
-                                        color: Colors.white,
+                                        color: kPrimaryLightColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 50,
                                         fontFamily: 'Bebas')),
                               ]),
                             ),
-                            SizedBox(height: 55),
+                            SizedBox(height: 20),
+                            Image.asset(
+                              "assets/clock.png",
+                              width: 500.0,
+                              height: 240.0,
+                            ),
                             TextFormField(
                               decoration: textInputDecoration.copyWith(
                                   hintText: 'Email'),
@@ -118,7 +122,8 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                       ),
-                    ),CustomPaint(painter: CurvePainter()),
+                    ),
+                    CustomPaint(painter: CurvePainter()),
                   ],
                 )));
   }
@@ -136,7 +141,7 @@ class _SignInState extends State<SignIn> {
             Text(
               'Don\'t have an account ?',
               style: TextStyle(
-                  fontSize: 13, fontFamily: 'Bebas', color: Colors.white),
+                  fontSize: 13, fontFamily: 'Bebas', color: Colors.black),
             ),
             SizedBox(
               width: 5,
@@ -144,7 +149,7 @@ class _SignInState extends State<SignIn> {
             Text(
               'Register',
               style: TextStyle(
-                  fontSize: 13, fontFamily: 'Bebas', color: Color(0xffFFD119)),
+                  fontSize: 13, fontFamily: 'Bebas', color: kPrimaryLightColor),
             ),
           ],
         ),
@@ -154,7 +159,6 @@ class _SignInState extends State<SignIn> {
 }
 
 class CurvePainter extends CustomPainter {
-
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
@@ -168,5 +172,9 @@ class CurvePainter extends CustomPainter {
     path.lineTo(0, 0);
     canvas.drawPath(path, paint);
   }
-  @override bool shouldRepaint(CustomPainter oldDelegate) { return true; } 
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
 }
