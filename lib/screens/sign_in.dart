@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.amber[50],
+            backgroundColor: Colors.amber[200],
             body: Container(
                 height: double.infinity,
                 decoration: BoxDecoration(
@@ -45,14 +45,14 @@ class _SignInState extends State<SignIn> {
                             RichText(
                               text: TextSpan(children: <TextSpan>[
                                 TextSpan(
-                                    text: "ASI",
+                                    text: "ASH",
                                     style: TextStyle(
                                         color: kPrimaryColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 50,
                                         fontFamily: 'Bebas')),
                                 TextSpan(
-                                    text: "SU",
+                                    text: "ISU",
                                     style: TextStyle(
                                         color: kPrimaryLightColor,
                                         fontWeight: FontWeight.bold,

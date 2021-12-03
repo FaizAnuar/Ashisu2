@@ -33,7 +33,7 @@ class _RegisterState extends State<Register> {
         ? Loading()
         : Scaffold(
             resizeToAvoidBottomInset: true,
-            backgroundColor: Color(0xFF5C0B68),
+            backgroundColor: Colors.amber[200],
             body: Container(
                 height: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
@@ -46,22 +46,27 @@ class _RegisterState extends State<Register> {
                         RichText(
                           text: TextSpan(children: <TextSpan>[
                             TextSpan(
-                                text: "CAR",
+                                text: "ASH",
                                 style: TextStyle(
-                                    color: Color(0xffFFD119),
+                                    color: kPrimaryColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 50,
                                     fontFamily: 'Bebas')),
                             TextSpan(
-                                text: "OSAK",
+                                text: "ISU",
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: kPrimaryLightColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 50,
                                     fontFamily: 'Bebas')),
                           ]),
                         ),
-                        SizedBox(height: 45),
+                        SizedBox(height: 20),
+                        Image.asset(
+                          "assets/manage.png",
+                          width: 500.0,
+                          height: 240.0,
+                        ),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
                               hintText: 'User Name'),
@@ -139,7 +144,7 @@ class _RegisterState extends State<Register> {
             Text(
               'Already have an account ?',
               style: TextStyle(
-                  fontSize: 13, fontFamily: 'Bebas', color: Colors.white),
+                  fontSize: 13, fontFamily: 'Bebas', color: Colors.black),
             ),
             SizedBox(
               width: 5,
@@ -147,7 +152,7 @@ class _RegisterState extends State<Register> {
             Text(
               'Log In',
               style: TextStyle(
-                  fontSize: 13, fontFamily: 'Bebas', color: Color(0xffFFD119)),
+                  fontSize: 13, fontFamily: 'Bebas', color: kPrimaryLightColor),
             ),
           ],
         ),
