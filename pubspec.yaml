@@ -52,6 +52,7 @@ dependencies:
   smooth_star_rating: ^1.1.1
   google_maps_flutter: ^2.0.6
   font_awesome_flutter: ^9.1.0
+  syncfusion_flutter_calendar: ^19.1.59
   
  
 

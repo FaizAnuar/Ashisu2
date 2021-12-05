@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gowallpaper/screens/calendar.dart';
 import 'package:gowallpaper/screens/profile.dart';
 import 'package:gowallpaper/services/auth.dart';
 //import 'package:youtube/Service.dart';
@@ -147,7 +148,13 @@ class _SelectPageState extends State<SelectPage> {
                 Column(
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CalendarWidget()),
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.green[100],
@@ -167,7 +174,7 @@ class _SelectPageState extends State<SelectPage> {
                               height: 5,
                             ),
                             Text(
-                              "Service",
+                              "Calendar",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
