@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/screens/event_editing_page.dart';
-import 'package:gowallpaper/shared/constants.dart';
+import 'package:Ashisu/screens/event_editing_page.dart';
+import 'package:Ashisu/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

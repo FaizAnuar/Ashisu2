@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/widgets/title_appbar.dart';
+import 'package:Ashisu/widgets/title_appbar.dart';
 import 'package:provider/provider.dart';
-import 'package:gowallpaper/bloc/theme.dart';
+import 'package:Ashisu/bloc/theme.dart';
 
 class ChangeTheme extends StatelessWidget {
   @override

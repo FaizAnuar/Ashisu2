@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/shared/constants.dart';
+import 'package:Ashisu/shared/constants.dart';
 
 class Event {
   final String title;

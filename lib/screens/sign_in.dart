@@ -1,7 +1,7 @@
-import 'package:gowallpaper/services/auth.dart';
+import 'package:Ashisu/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/shared/constants.dart';
-import 'package:gowallpaper/shared/loading.dart';
+import 'package:Ashisu/shared/constants.dart';
+import 'package:Ashisu/shared/loading.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class SignIn extends StatefulWidget {

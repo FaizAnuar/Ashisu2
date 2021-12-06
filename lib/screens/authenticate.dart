@@ -1,6 +1,6 @@
-import 'package:gowallpaper/screens/register.dart';
+import 'package:Ashisu/screens/register.dart';
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/screens/sign_in.dart';
+import 'package:Ashisu/screens/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   @override

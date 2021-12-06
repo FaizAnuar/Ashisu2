@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/services/auth.dart';
-import 'package:gowallpaper/views/fingerprint_view.dart';
+import 'package:Ashisu/services/auth.dart';
+import 'package:Ashisu/views/fingerprint_view.dart';
 
 class Profile extends StatefulWidget {
   @override

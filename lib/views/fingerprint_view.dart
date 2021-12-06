@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/bloc/theme.dart';
-import 'package:gowallpaper/screens/select.dart';
+import 'package:Ashisu/bloc/theme.dart';
+import 'package:Ashisu/screens/select.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:gowallpaper/widgets/title_appbar.dart';
+import 'package:Ashisu/widgets/title_appbar.dart';
 
 class Fingerprint extends StatelessWidget {
   final LocalAuthentication localAuth = LocalAuthentication();

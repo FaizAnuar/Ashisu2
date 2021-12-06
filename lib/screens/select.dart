@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:gowallpaper/screens/calendar.dart';
-import 'package:gowallpaper/screens/profile.dart';
-import 'package:gowallpaper/services/auth.dart';
+import 'package:Ashisu/screens/calendar.dart';
+import 'package:Ashisu/screens/profile.dart';
+import 'package:Ashisu/services/auth.dart';
 //import 'package:youtube/Service.dart';
 //import 'package:youtube/info.dart';
 
@@ -47,14 +47,14 @@ class _SelectPageState extends State<SelectPage> {
             RichText(
               text: TextSpan(children: <TextSpan>[
                 TextSpan(
-                    text: "CAR",
+                    text: "ASH",
                     style: TextStyle(
                         color: Color(0xffFFD119),
                         fontWeight: FontWeight.bold,
                         fontSize: 50,
                         fontFamily: 'Bebas')),
                 TextSpan(
-                    text: "OSAK",
+                    text: "ISU",
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -166,7 +166,7 @@ class _SelectPageState extends State<SelectPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.car_repair,
+                              Icons.calendar_today,
                               size: 45,
                               color: Colors.green[700],
                             ),

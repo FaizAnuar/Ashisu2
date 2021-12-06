@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:gowallpaper/bloc/theme.dart';
+import 'package:Ashisu/bloc/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:path/path.dart' as Path;
-import 'package:gowallpaper/shared/constants.dart';
+import 'package:Ashisu/shared/constants.dart';
 
 class ShowFileImage extends StatefulWidget {
   final File image;

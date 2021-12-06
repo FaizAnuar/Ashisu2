@@ -1,6 +1,6 @@
-import 'package:gowallpaper/models/user.dart';
+import 'package:Ashisu/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gowallpaper/services/database.dart';
+import 'package:Ashisu/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,12 +30,12 @@ class AuthService {
 
   //register with email & password
   Future registerWithEmailAndPassword(
-      String email, String password, String userName,int userType) async {
+      String email, String password, String userName, int userType) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User userFirebase = result.user;
-      await userSetup(userName, email,userType);
+      await userSetup(userName, email, userType);
       return _userFromFirebaseUser(userFirebase);
     } catch (e) {
       print(e.toString());

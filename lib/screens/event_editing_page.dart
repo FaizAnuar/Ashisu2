@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/models/event.dart';
+import 'package:Ashisu/models/event.dart';
 import 'package:provider/provider.dart';
 
 class EventEditingPage extends StatefulWidget {

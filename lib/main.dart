@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gowallpaper/background.dart';
+import 'package:Ashisu/background.dart';
 import 'package:provider/provider.dart';
-import 'package:gowallpaper/bloc/theme.dart';
+import 'package:Ashisu/bloc/theme.dart';
 
-import 'package:gowallpaper/screens/wrapper.dart';
-import 'package:gowallpaper/models/user.dart';
-import 'package:gowallpaper/services/auth.dart';
+import 'package:Ashisu/screens/wrapper.dart';
+import 'package:Ashisu/models/user.dart';
+import 'package:Ashisu/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -91,7 +91,7 @@ class MyPage extends StatelessWidget {
                 height: 30,
               ),
               Image.asset(
-                "assets/time.gif",
+                "assets/tm3.png",
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
