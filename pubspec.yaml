@@ -53,6 +53,7 @@ dependencies:
   google_maps_flutter: ^2.0.6
   font_awesome_flutter: ^9.1.0
   syncfusion_flutter_calendar: ^19.1.59
+  intl: ^0.17.0
   
  
 
