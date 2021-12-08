@@ -1,3 +1,4 @@
+import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _SelectPageState extends State<SelectPage> {
     final User user = auth.currentUser;
     uid = user.uid;
     return Scaffold(
-      backgroundColor: Color(0xFFCBC3E3),
+      backgroundColor: Colors.deepPurple[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -49,14 +50,14 @@ class _SelectPageState extends State<SelectPage> {
                 TextSpan(
                     text: "ASH",
                     style: TextStyle(
-                        color: Color(0xffFFD119),
+                        color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 50,
                         fontFamily: 'Bebas')),
                 TextSpan(
                     text: "ISU",
                     style: TextStyle(
-                        color: Colors.white,
+                        color: kPrimaryLightColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 50,
                         fontFamily: 'Bebas')),
@@ -98,7 +99,7 @@ class _SelectPageState extends State<SelectPage> {
             ),
             SizedBox(height: 20),
             Image.asset(
-              "assets/carservice.gif",
+              "assets/time.gif",
               fit: BoxFit.cover,
               width: double.infinity,
             ),

@@ -24,7 +24,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final AuthService _auth = AuthService();
     return Scaffold(
-        backgroundColor: Color(0xFFCBC3E3),
+        backgroundColor: Colors.deepPurple[50],
         appBar: AppBar(
           backgroundColor: Color(0xFF5C0B68),
           elevation: 1,

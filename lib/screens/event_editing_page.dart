@@ -104,26 +104,56 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   buildDateTimePickers() {
     return Column(
-      children: [buildFrom()],
+      children: [
+        buildFrom(),
+        buildTo(),
+      ],
     );
   }
 
   Widget buildFrom() {
-    return Row(
-      children: [
-        Expanded(
-          child: buildDropdownField(
-            text: Utils.toDate(fromDate),
-            onClicked: () {},
+    return buildHeader(
+      header: '  From',
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: buildDropdownField(
+              text: Utils.toDate(fromDate),
+              onClicked: () {},
+            ),
           ),
-        ),
-        Expanded(
-          child: buildDropdownField(
-            text: Utils.toTime(fromDate),
-            onClicked: () {},
+          Expanded(
+            child: buildDropdownField(
+              text: Utils.toTime(fromDate),
+              onClicked: () {},
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget buildTo() {
+    return buildHeader(
+      header: '  To',
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: buildDropdownField(
+              text: Utils.toDate(toDate),
+              onClicked: () {},
+            ),
+          ),
+          Expanded(
+            child: buildDropdownField(
+              text: Utils.toTime(toDate),
+              onClicked: () {},
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -134,6 +164,22 @@ class _EventEditingPageState extends State<EventEditingPage> {
     return ListTile(
       title: Text(text),
       trailing: Icon(Icons.arrow_drop_down),
+    );
+  }
+
+  Widget buildHeader({
+    String header,
+    Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          header,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        child,
+      ],
     );
   }
 }
