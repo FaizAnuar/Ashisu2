@@ -211,7 +211,7 @@ class _SelectPageState extends State<SelectPage> {
                               height: 5,
                             ),
                             Text(
-                              "Towing",
+                              "Setting",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,

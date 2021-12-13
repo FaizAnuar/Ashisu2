@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:Ashisu/models/event.dart';
 import 'package:provider/provider.dart';
 import 'package:Ashisu/utils.dart';
+import 'package:flutter/cupertino.dart';
 
 class EventEditingPage extends StatefulWidget {
   final Event event;
+
   const EventEditingPage({
     key,
     this.event,
@@ -20,6 +22,7 @@ class EventEditingPage extends StatefulWidget {
 class _EventEditingPageState extends State<EventEditingPage> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
   DateTime fromDate;
   DateTime toDate;
 
@@ -120,13 +123,17 @@ class _EventEditingPageState extends State<EventEditingPage> {
             flex: 2,
             child: buildDropdownField(
               text: Utils.toDate(fromDate),
-              onClicked: () {},
+              onClicked: () {
+                return pickFromDateTime(pickDate: true);
+              },
             ),
           ),
           Expanded(
             child: buildDropdownField(
               text: Utils.toTime(fromDate),
-              onClicked: () {},
+              onClicked: () {
+                return pickFromDateTime(pickDate: false);
+              },
             ),
           ),
         ],
@@ -157,29 +164,54 @@ class _EventEditingPageState extends State<EventEditingPage> {
     );
   }
 
-  Widget buildDropdownField({
-    String text,
-    VoidCallback onClicked,
-  }) {
-    return ListTile(
-      title: Text(text),
-      trailing: Icon(Icons.arrow_drop_down),
-    );
+  Future pickFromDateTime({bool pickDate}) async {
+    final date = await pickDateTime(fromDate, pickDate: pickDate);
   }
 
-  Widget buildHeader({
-    String header,
-    Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          header,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        child,
-      ],
-    );
+  Future<DateTime> pickDateTime(
+    DateTime initialDate, {
+    bool pickDate,
+    DateTime firstDate,
+  }) async {
+    if (pickDate) {
+      final DateTime date = await showDatePicker(
+        context: context,
+        firstDate: firstDate ?? DateTime(2019, 8),
+        lastDate: DateTime(2101),
+        initialDate: DateTime.now(),
+      );
+      if (date == null) return null;
+
+      final time =
+          Duration(hours: initialDate.hour, minutes: initialDate.minute);
+
+      return date.add(time);
+    }
   }
+}
+
+Widget buildDropdownField({
+  String text,
+  VoidCallback onClicked,
+}) {
+  return ListTile(
+    title: Text(text),
+    trailing: Icon(Icons.arrow_drop_down),
+  );
+}
+
+Widget buildHeader({
+  String header,
+  Widget child,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        header,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      child,
+    ],
+  );
 }
