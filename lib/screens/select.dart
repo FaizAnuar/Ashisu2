@@ -1,3 +1,4 @@
+import 'package:Ashisu/screens/notes_widget.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -125,7 +126,7 @@ class _SelectPageState extends State<SelectPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.warning,
+                              Icons.schedule,
                               size: 45,
                               color: Colors.pink[700],
                             ),
@@ -133,7 +134,7 @@ class _SelectPageState extends State<SelectPage> {
                               height: 5,
                             ),
                             Text(
-                              "Assistance",
+                              "Timetable",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -191,7 +192,13 @@ class _SelectPageState extends State<SelectPage> {
                 Column(
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotesWidget()),
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.blue[100],
@@ -203,7 +210,7 @@ class _SelectPageState extends State<SelectPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.build,
+                              Icons.notes,
                               size: 45,
                               color: Colors.blue[700],
                             ),
@@ -211,7 +218,7 @@ class _SelectPageState extends State<SelectPage> {
                               height: 5,
                             ),
                             Text(
-                              "Setting",
+                              "Notes",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,

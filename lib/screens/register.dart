@@ -110,7 +110,7 @@ class _RegisterState extends State<Register> {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
-                                      email, password, userName, _groupValue);
+                                      email, password, userName);
                               if (result == null) {
                                 setState(() {
                                   error = 'Email is not valid';

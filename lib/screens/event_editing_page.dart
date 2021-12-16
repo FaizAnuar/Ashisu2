@@ -9,9 +9,8 @@ import 'package:flutter/cupertino.dart';
 
 class EventEditingPage extends StatefulWidget {
   final Event event;
-
   const EventEditingPage({
-    key,
+    Key key,
     this.event,
   }) : super(key: key);
 
@@ -22,7 +21,6 @@ class EventEditingPage extends StatefulWidget {
 class _EventEditingPageState extends State<EventEditingPage> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
   DateTime fromDate;
   DateTime toDate;
 
@@ -164,21 +162,21 @@ class _EventEditingPageState extends State<EventEditingPage> {
     );
   }
 
-  Future pickFromDateTime({bool pickDate}) async {
+  Future pickFromDateTime({@required bool pickDate}) async {
     final date = await pickDateTime(fromDate, pickDate: pickDate);
   }
 
   Future<DateTime> pickDateTime(
     DateTime initialDate, {
-    bool pickDate,
+    @required bool pickDate,
     DateTime firstDate,
   }) async {
     if (pickDate) {
       final DateTime date = await showDatePicker(
         context: context,
+        initialDate: initialDate,
         firstDate: firstDate ?? DateTime(2019, 8),
         lastDate: DateTime(2101),
-        initialDate: DateTime.now(),
       );
       if (date == null) return null;
 

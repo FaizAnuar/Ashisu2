@@ -55,7 +55,7 @@ dependencies:
   syncfusion_flutter_calendar: ^19.1.59
   intl: ^0.17.0
   date_time_picker: "^2.1.0"
-  
+  auto_size_text: ^2.1.0
  
 
 dev_dependencies:
