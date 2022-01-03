@@ -1,3 +1,7 @@
+import 'package:Ashisu/services/database.dart';
+import 'package:Ashisu/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:Ashisu/models/NotesPage.dart';
@@ -11,7 +15,7 @@ class NotesWidget extends StatefulWidget {
 
 class _NotesWidgetState extends State<NotesWidget> {
   var _formKey = GlobalKey<FormState>();
-
+  String notes;
   @override
   void initState() {
     super.initState();
@@ -37,10 +41,10 @@ class _NotesWidgetState extends State<NotesWidget> {
       ),
       body: noteHeading.length > 0
           ? buildNotes()
-          : Center(child: Text("Add Notes...")),
+          : Center(child: Text("Add Notes")),
       floatingActionButton: FloatingActionButton(
         mini: false,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: kPrimaryLightColor,
         onPressed: () {
           _settingModalBottomSheet(context);
         },
@@ -92,6 +96,17 @@ class _NotesWidgetState extends State<NotesWidget> {
                                       }
                                       deletedNoteHeading = "";
                                       deletedNoteDescription = "";
+                                    });
+                                    var firebaseUser =
+                                        FirebaseAuth.instance.currentUser;
+                                    firestoreInstance
+                                        .collection("users")
+                                        .doc(firebaseUser.uid)
+                                        .update({
+                                      "noteHeading": FieldValue.delete(),
+                                      "noteDescription": FieldValue.delete(),
+                                    }).then((_) {
+                                      print("success!");
                                     });
                                   },
                                   child: new Text(
@@ -276,7 +291,17 @@ class _NotesWidgetState extends State<NotesWidget> {
                                   noteHeadingController.clear();
                                   noteDescriptionController.clear();
                                 });
-                                Navigator.pop(context);
+                                var firebaseUser =
+                                    FirebaseAuth.instance.currentUser;
+                                firestoreInstance
+                                    .collection("Users")
+                                    .doc(firebaseUser.uid)
+                                    .set({
+                                  "noteHeading": noteHeading,
+                                  "noteDescription": noteDescription,
+                                }, SetOptions(merge: true)).then((_) {
+                                  print("success!");
+                                });
                               }
                               print("Notes.dart LineNo:239");
                               print(noteHeadingController.text);
@@ -380,13 +405,13 @@ Widget notesHeader() {
         Text(
           "My Notes",
           style: TextStyle(
-            color: Colors.blueAccent,
+            color: kPrimaryLightColor,
             fontSize: 25.00,
             fontWeight: FontWeight.w500,
           ),
         ),
         Divider(
-          color: Colors.blueAccent,
+          color: kPrimaryLightColor,
           thickness: 2.5,
         ),
       ],

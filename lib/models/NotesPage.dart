@@ -12,6 +12,8 @@ int notesDescriptionMaxLenth;
 String deletedNoteHeading = "";
 String deletedNoteDescription = "";
 
+
+
 List<Color> noteColor = [
   Colors.pink[50],
   Colors.green[50],

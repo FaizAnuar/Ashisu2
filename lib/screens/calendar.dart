@@ -11,15 +11,10 @@ class CalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        elevation: 1,
-        centerTitle: true,
-        title: Text("Calendar",
-            style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.amber[200]),
-            textAlign: TextAlign.center),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: notesHeader(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -42,4 +37,31 @@ class CalendarWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget notesHeader() {
+  return Padding(
+    padding: const EdgeInsets.only(
+      top: 10,
+      left: 2.5,
+      right: 2.5,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Calendar",
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontSize: 25.00,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Divider(
+          color: kPrimaryColor,
+          thickness: 2.5,
+        ),
+      ],
+    ),
+  );
 }

@@ -83,25 +83,25 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 50,
                 ),
-                ButtonTheme(
-                  minWidth: MediaQuery.of(context).size.width / 1.1,
-                  height: MediaQuery.of(context).size.height / 13,
-                  child: RaisedButton.icon(
-                    icon: Icon(Icons.wallet_membership),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    color: Colors.purple[400],
-                    textColor: Colors.white,
-                    label: Text('Wallet'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Fingerprint()),
-                      );
-                    },
-                  ),
-                ),
+                //ButtonTheme(
+                //  minWidth: MediaQuery.of(context).size.width / 1.1,
+                // height: MediaQuery.of(context).size.height / 13,
+                // child: RaisedButton.icon(
+                //   icon: Icon(Icons.wallet_membership),
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(20),
+                //   ),
+                //   color: Colors.purple[400],
+                //   textColor: Colors.white,
+                //  label: Text('Wallet'),
+                //  onPressed: () {
+                //    Navigator.push(
+                //      context,
+                //      MaterialPageRoute(builder: (context) => Fingerprint()),
+                //    );
+                //   },
+                //  ),
+                // ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 100,
                 ),

@@ -1,4 +1,5 @@
 import 'package:Ashisu/screens/notes_widget.dart';
+import 'package:Ashisu/screens/timetable.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,8 @@ class _SelectPageState extends State<SelectPage> {
   @override
   Widget build(BuildContext context) {
     final User user = auth.currentUser;
+    final AuthService _auth = AuthService();
+
     uid = user.uid;
     return Scaffold(
       backgroundColor: Colors.deepPurple[50],
@@ -33,12 +36,12 @@ class _SelectPageState extends State<SelectPage> {
           TextButton.icon(
             icon: Icon(Icons.person, color: Color(0xFF5C0B68)),
             label: Text(
-              'Profile',
+              'Log Out',
               style: TextStyle(color: Color(0xFF5C0B68)),
             ),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Profile()));
+            onPressed: () async {
+              await _auth.signOut();
+              Navigator.pop(context);
             },
           ),
         ],
@@ -104,6 +107,7 @@ class _SelectPageState extends State<SelectPage> {
               fit: BoxFit.cover,
               width: double.infinity,
             ),
+            Container(),
             SizedBox(
               height: 35,
             ),
@@ -114,7 +118,13 @@ class _SelectPageState extends State<SelectPage> {
                 Column(
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TimetablePage()),
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.pink[100],

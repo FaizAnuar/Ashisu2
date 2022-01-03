@@ -50,12 +50,14 @@ dependencies:
   gradient_text: ^1.0.2
   flutter_svg: ^0.22.0
   smooth_star_rating: ^1.1.1
-  google_maps_flutter: ^2.0.6
   font_awesome_flutter: ^9.1.0
   syncfusion_flutter_calendar: ^19.1.59
   intl: ^0.17.0
   date_time_picker: "^2.1.0"
   auto_size_text: ^2.1.0
+  pedometer: ^3.0.0
+  table_calendar: ^2.2.3
+  flutter_slidable: ^0.5.7
  
 
 dev_dependencies:
