@@ -52,7 +52,7 @@ class _timetablePageState extends State<timetablePage> {
                 backgroundColor: kPrimaryColor,
                 elevation: 0,
                 title: Text(
-                  "Work List",
+                  "Timetable",
                   style: TextStyle(fontSize: 30),
                 ),
                 actions: [
@@ -62,6 +62,7 @@ class _timetablePageState extends State<timetablePage> {
                       color: Colors.white,
                       size: 30,
                     ),
+                    onPressed: () {},
                   )
                 ],
               ),
@@ -76,7 +77,7 @@ class _timetablePageState extends State<timetablePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Monday");
                           },
                           child: Text(
                             "Mon",
@@ -89,7 +90,7 @@ class _timetablePageState extends State<timetablePage> {
                         Container(
                           height: 4,
                           width: 40,
-                          color: (filterType == "today")
+                          color: (filterType == "Monday")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -100,7 +101,7 @@ class _timetablePageState extends State<timetablePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Tuesday");
                           },
                           child: Text(
                             "Tues",
@@ -113,7 +114,7 @@ class _timetablePageState extends State<timetablePage> {
                         Container(
                           height: 4,
                           width: 40,
-                          color: (filterType == "today")
+                          color: (filterType == "Tuesday")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -124,7 +125,7 @@ class _timetablePageState extends State<timetablePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Wednesday");
                           },
                           child: Text(
                             "Wed",
@@ -137,7 +138,7 @@ class _timetablePageState extends State<timetablePage> {
                         Container(
                           height: 4,
                           width: 40,
-                          color: (filterType == "today")
+                          color: (filterType == "Wednesday")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -148,7 +149,7 @@ class _timetablePageState extends State<timetablePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Thursday");
                           },
                           child: Text(
                             "Thur",
@@ -161,7 +162,7 @@ class _timetablePageState extends State<timetablePage> {
                         Container(
                           height: 4,
                           width: 40,
-                          color: (filterType == "today")
+                          color: (filterType == "Thursday")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -172,7 +173,7 @@ class _timetablePageState extends State<timetablePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Friday");
                           },
                           child: Text(
                             "Fri",
@@ -185,7 +186,7 @@ class _timetablePageState extends State<timetablePage> {
                         Container(
                           height: 4,
                           width: 40,
-                          color: (filterType == "today")
+                          color: (filterType == "Friday")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -348,7 +349,7 @@ class _timetablePageState extends State<timetablePage> {
                                 onTap: openNewCheckList,
                                 child: Container(
                                   child: Text(
-                                    "Add Checklist",
+                                    "Add Reminder",
                                     style: TextStyle(fontSize: 18),
                                   ),
                                 ),

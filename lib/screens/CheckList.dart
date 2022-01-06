@@ -29,7 +29,7 @@ class _checkListState extends State<checkList> {
         backgroundColor: Color(0xfff96060),
         elevation: 0,
         title: Text(
-          "New CheckList",
+          "New Reminder",
           style: TextStyle(fontSize: 25),
         ),
         leading: IconButton(
@@ -200,7 +200,7 @@ class _checkListState extends State<checkList> {
                                   color: Color(0xffff96060)),
                               child: Center(
                                 child: Text(
-                                  "Add Checklist",
+                                  "Add Reminder",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),

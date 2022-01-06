@@ -339,6 +339,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                           ),
                           prefixIcon: Icon(Icons.text_fields),
                         ),
+                        // ignore: missing_return
                         validator: (String noteHeading) {
                           if (noteHeading.isEmpty) {
                             return "Please enter Note Heading";
@@ -370,11 +371,14 @@ class _NotesWidgetState extends State<NotesWidget> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            // ignore: missing_return
                             validator: (String noteDescription) {
                               if (noteDescription.isEmpty) {
                                 return "Please enter Note Desc";
-                              } else if (noteDescription.startsWith(" ")) {
-                                return "Please avoid whitespaces";
+                              } else {
+                                if (noteDescription.startsWith(" ")) {
+                                  return "Please avoid whitespaces";
+                                }
                               }
                             },
                           ),

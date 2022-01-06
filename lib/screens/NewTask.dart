@@ -69,47 +69,6 @@ class _newTaskState extends State<newTask> {
                     SizedBox(
                       height: 25,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "For",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              color: Colors.grey.withOpacity(0.2)),
-                          child: Text(
-                            "Asignee",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "In",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              color: Colors.grey.withOpacity(0.2)),
-                          child: Text(
-                            "Project",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
                     Container(
                       padding: EdgeInsets.all(10),
                       color: Colors.grey.withOpacity(0.2),
@@ -180,12 +139,67 @@ class _newTaskState extends State<newTask> {
                           SizedBox(
                             height: 20,
                           ),
+                          Text(
+                            "Color",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.pink),
+                              ),
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.blue),
+                              ),
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.green),
+                              ),
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Color(0xfff4ca8f)),
+                              ),
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Color(0xff3d3a62)),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Container(
                             padding: EdgeInsets.all(10),
                             color: Colors.grey.withOpacity(0.2),
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: "Due Date",
+                                hintText: "Day",
                                 border: InputBorder.none,
                               ),
                               style: TextStyle(fontSize: 18),
@@ -193,24 +207,6 @@ class _newTaskState extends State<newTask> {
                           ),
                           SizedBox(
                             height: 20,
-                          ),
-                          Text(
-                            "Add member",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                                color: Colors.grey.withOpacity(0.2)),
-                            child: Text(
-                              "Anyone",
-                              style: TextStyle(fontSize: 18),
-                            ),
                           ),
                           SizedBox(
                             height: 20,
