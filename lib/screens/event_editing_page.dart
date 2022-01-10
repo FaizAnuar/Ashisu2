@@ -3,9 +3,11 @@ import 'dart:ffi';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/models/event.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:Ashisu/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 
 class EventEditingPage extends StatefulWidget {
   final Event event;
@@ -23,6 +25,10 @@ class _EventEditingPageState extends State<EventEditingPage> {
   final titleController = TextEditingController();
   DateTime fromDate;
   DateTime toDate;
+  DateTime time;
+  DateTime startTime;
+  DateTime valu;
+  final dateFormatter = DateFormat('dd MMMM yyyy');
 
   @override
   void initState() {
@@ -105,9 +111,139 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   buildDateTimePickers() {
     return Column(
-      children: [
-        buildFrom(),
-        buildTo(),
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 4.0,
+          onPressed: () {
+            DateTimePicker(
+              type: DateTimePickerType.date,
+              dateMask: 'dd MMMM yyyy',
+              initialValue: DateTime.now().toString(),
+              firstDate: DateTime(1940),
+              lastDate: DateTime.now().add(Duration(days: 1)),
+              // icon: Icon(Icons.event),
+              // dateLabelText: 'Date',
+              // timeLabelText: "Hour",
+              onChanged: (valB) {
+                fromDate = DateFormat("dd MMMM yyyy")
+                    .format(DateTime.parse(valB)) as DateTime;
+              },
+              validator: (valB) {
+                return valB;
+              },
+              onSaved: (valB) {
+                fromDate = DateFormat("dd MMMM yyyy")
+                    .format(DateTime.parse(valB)) as DateTime;
+              },
+            );
+          },
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.date_range,
+                            size: 18.0,
+                            color: Colors.teal,
+                          ),
+                          Text(
+                            " $fromDate",
+                            style: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "  Change",
+                  style: TextStyle(
+                      color: Colors.teal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white,
+        ),
+        SizedBox(
+          height: 20.0,
+        ),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 4.0,
+          onPressed: () {
+            DateTimePicker(
+              type: DateTimePickerType.time,
+              initialValue: " ",
+              locale: Locale('ms', 'MY'),
+              onChanged: (value) {
+                startTime = value as DateTime;
+              },
+              validator: (value) {
+                return value;
+              },
+              onSaved: (value) {
+                startTime = value as DateTime;
+              },
+            );
+          },
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.access_time,
+                            size: 18.0,
+                            color: Colors.teal,
+                          ),
+                          Text(
+                            " $time",
+                            style: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "  Change",
+                  style: TextStyle(
+                      color: Colors.teal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white,
+        )
       ],
     );
   }

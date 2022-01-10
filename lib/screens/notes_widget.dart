@@ -1,3 +1,4 @@
+import 'package:Ashisu/screens/select.dart';
 import 'package:Ashisu/services/database.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,10 +35,24 @@ class _NotesWidgetState extends State<NotesWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: notesHeader(),
+        title: Text("Notes"),
+        //centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_rounded),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SelectPage()));
+          },
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purple, Colors.red],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft,
+            ),
+          ),
+        ),
       ),
       body: noteHeading.length > 0
           ? buildNotes()
@@ -394,31 +409,4 @@ class _NotesWidgetState extends State<NotesWidget> {
       },
     );
   }
-}
-
-Widget notesHeader() {
-  return Padding(
-    padding: const EdgeInsets.only(
-      top: 10,
-      left: 2.5,
-      right: 2.5,
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "My Notes",
-          style: TextStyle(
-            color: kPrimaryLightColor,
-            fontSize: 25.00,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Divider(
-          color: kPrimaryLightColor,
-          thickness: 2.5,
-        ),
-      ],
-    ),
-  );
 }

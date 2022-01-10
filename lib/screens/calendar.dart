@@ -1,3 +1,4 @@
+import 'package:Ashisu/screens/select.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/screens/event_editing_page.dart';
 import 'package:Ashisu/shared/constants.dart';
@@ -11,10 +12,24 @@ class CalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: notesHeader(),
+        title: Text("Calendar"),
+        //centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_rounded),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SelectPage()));
+          },
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purple, Colors.red],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft,
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -37,31 +52,4 @@ class CalendarWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget notesHeader() {
-  return Padding(
-    padding: const EdgeInsets.only(
-      top: 10,
-      left: 2.5,
-      right: 2.5,
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Calendar",
-          style: TextStyle(
-            color: kPrimaryColor,
-            fontSize: 25.00,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Divider(
-          color: kPrimaryColor,
-          thickness: 2.5,
-        ),
-      ],
-    ),
-  );
 }

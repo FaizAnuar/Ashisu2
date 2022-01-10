@@ -18,6 +18,7 @@ class newTask extends StatefulWidget {
 }
 
 class _newTaskState extends State<newTask> {
+  String Day;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,16 +195,37 @@ class _newTaskState extends State<newTask> {
                           SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            color: Colors.grey.withOpacity(0.2),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "Day",
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(fontSize: 18),
+                          DropdownButton<String>(
+                            value: Day,
+                            //elevation: 5,
+                            style: TextStyle(color: Colors.black),
+
+                            items: <String>[
+                              'Monday',
+                              'Tuesday',
+                              'Wednesday',
+                              'Thursday',
+                              'Friday',
+                              'Saturday',
+                              'Sunday',
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            hint: Text(
+                              "Please choose a Day",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
                             ),
+                            onChanged: (String value) {
+                              setState(() {
+                                Day = value;
+                              });
+                            },
                           ),
                           SizedBox(
                             height: 20,
