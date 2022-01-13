@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:Ashisu/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:date_format/date_format.dart';
 
 class EventEditingPage extends StatefulWidget {
   final Event event;
@@ -21,6 +22,10 @@ class EventEditingPage extends StatefulWidget {
 }
 
 class _EventEditingPageState extends State<EventEditingPage> {
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate1 = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   DateTime fromDate;
@@ -29,6 +34,43 @@ class _EventEditingPageState extends State<EventEditingPage> {
   DateTime startTime;
   DateTime valu;
   final dateFormatter = DateFormat('dd MMMM yyyy');
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  Future<void> _selectDate1(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate1,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate1)
+      setState(() {
+        selectedDate1 = picked;
+      });
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+    );
+    if (timeOfDay != null && timeOfDay != selectedTime) {
+      setState(() {
+        selectedTime = timeOfDay;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -114,33 +156,138 @@ class _EventEditingPageState extends State<EventEditingPage> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        SizedBox(
+          height: 10.0,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            color: Colors.transparent,
+            child: Text(
+              '    From:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.left,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
         RaisedButton(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
           elevation: 4.0,
-          onPressed: () {
-            DateTimePicker(
-              type: DateTimePickerType.date,
-              dateMask: 'dd MMMM yyyy',
-              initialValue: DateTime.now().toString(),
-              firstDate: DateTime(1940),
-              lastDate: DateTime.now().add(Duration(days: 1)),
-              // icon: Icon(Icons.event),
-              // dateLabelText: 'Date',
-              // timeLabelText: "Hour",
-              onChanged: (valB) {
-                fromDate = DateFormat("dd MMMM yyyy")
-                    .format(DateTime.parse(valB)) as DateTime;
-              },
-              validator: (valB) {
-                return valB;
-              },
-              onSaved: (valB) {
-                fromDate = DateFormat("dd MMMM yyyy")
-                    .format(DateTime.parse(valB)) as DateTime;
-              },
-            );
-          },
+          onPressed: () => _selectDate(context),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.date_range,
+                            size: 18.0,
+                            color: Colors.black,
+                          ),
+                          Text(
+                            " ${selectedDate.toLocal()}",
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "  Change",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 4.0,
+          onPressed: () => _selectTime(context),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.access_alarms_rounded,
+                            size: 18.0,
+                            color: Colors.black,
+                          ),
+                          Text(
+                            "${selectedTime.hour}:${selectedTime.minute}",
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "  Change",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white,
+        ),
+        SizedBox(
+          height: 20.0,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            color: Colors.transparent,
+            child: Text(
+              '    To:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.left,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 4.0,
+          onPressed: () => _selectDate1(context),
           child: Container(
             alignment: Alignment.center,
             height: 50.0,
@@ -158,11 +305,59 @@ class _EventEditingPageState extends State<EventEditingPage> {
                             color: Colors.teal,
                           ),
                           Text(
-                            " $fromDate",
+                            " ${selectedDate1.toLocal()}",
                             style: TextStyle(
-                                color: Colors.teal,
+                                color: Colors.purple,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18.0),
+                                fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "  Change",
+                  style: TextStyle(
+                      color: Colors.teal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
+                ),
+              ],
+            ),
+          ),
+          color: Colors.white,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 4.0,
+          onPressed: () => _selectTime(context),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.access_alarms_rounded,
+                            size: 18.0,
+                            color: Colors.teal,
+                          ),
+                          Text(
+                            "${selectedTime.hour}:${selectedTime.minute}",
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
                           ),
                         ],
                       ),
@@ -184,65 +379,18 @@ class _EventEditingPageState extends State<EventEditingPage> {
         SizedBox(
           height: 20.0,
         ),
-        RaisedButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          elevation: 4.0,
-          onPressed: () {
-            DateTimePicker(
-              type: DateTimePickerType.time,
-              initialValue: " ",
-              locale: Locale('ms', 'MY'),
-              onChanged: (value) {
-                startTime = value as DateTime;
-              },
-              validator: (value) {
-                return value;
-              },
-              onSaved: (value) {
-                startTime = value as DateTime;
-              },
-            );
-          },
-          child: Container(
-            alignment: Alignment.center,
-            height: 50.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.access_time,
-                            size: 18.0,
-                            color: Colors.teal,
-                          ),
-                          Text(
-                            " $time",
-                            style: TextStyle(
-                                color: Colors.teal,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Text(
-                  "  Change",
-                  style: TextStyle(
-                      color: Colors.teal,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0),
-                ),
-              ],
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              color: Color(0xffff96060)),
+          child: Center(
+            child: Text(
+              "Add Reminder",
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
-          color: Colors.white,
         )
       ],
     );

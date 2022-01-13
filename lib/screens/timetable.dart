@@ -95,7 +95,7 @@ class _timetablePageState extends State<timetablePage> {
           body: TabBarView(
             children: [
               buildPage('Monday'),
-              buildPage('t'),
+              buildPage1('t'),
               buildPage('w'),
               buildPage('t'),
               buildPage('f'),
@@ -107,154 +107,309 @@ class _timetablePageState extends State<timetablePage> {
       );
 
   Widget buildPage(String text) => Center(
-          child: Scaffold(
-        body: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Today ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
-                                style:
-                                    TextStyle(fontSize: 18, color: Colors.grey),
-                              )
-                            ],
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        taskWidget(Color(0xfff96060), "Meeting with someone",
-                            "9:00 AM"),
-                        taskWidget(
-                            Colors.blue, "Meeting with someone", "9:00 AM"),
-                        taskWidget(
-                            Colors.green, "Take your medicines", "9:00 AM"),
-                      ],
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Today ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey),
+                                )
+                              ],
+                            ),
+                          ),
+                          taskWidget(Color(0xfff96060), "Meeting with someone",
+                              "9:00 AM"),
+                          taskWidget(
+                              Colors.blue, "Meeting with someone", "9:00 AM"),
+                          taskWidget(
+                              Colors.green, "Take your medicines", "9:00 AM"),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 110,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        bottom: 0,
-                        child: Container(
-                          height: 90,
-                          width: MediaQuery.of(context).size.width,
-                          color: Color(0xff292e4e),
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                width: 80,
-                              ),
-                            ],
+                  Container(
+                    height: 110,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            height: 90,
+                            width: MediaQuery.of(context).size.width,
+                            color: Color(0xff292e4e),
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  width: 80,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 25,
-                        left: 0,
-                        right: 0,
-                        child: InkWell(
-                          onTap: openTaskPop,
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [Color(0xfff96060), Colors.red],
+                        Positioned(
+                          bottom: 25,
+                          left: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: openTaskPop,
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [Color(0xfff96060), Colors.red],
+                                  ),
+                                  shape: BoxShape.circle),
+                              child: Center(
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                      fontSize: 40, color: Colors.white),
                                 ),
-                                shape: BoxShape.circle),
-                            child: Center(
-                              child: Text(
-                                "+",
-                                style: TextStyle(
-                                    fontSize: 40, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Container(
+                child: (taskPop == "open")
+                    ? Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Center(
+                          child: InkWell(
+                            onTap: closeTaskPop,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white),
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    height: 1,
+                                  ),
+                                  InkWell(
+                                    onTap: openNewTask,
+                                    child: Container(
+                                      child: Text(
+                                        "Add Task",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 1,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    color: Colors.black.withOpacity(0.2),
+                                  ),
+                                  InkWell(
+                                    onTap: openNewCheckList,
+                                    child: Container(
+                                      child: Text(
+                                        "Add Reminder",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 1,
+                                  )
+                                ],
                               ),
                             ),
                           ),
                         ),
                       )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Container(
-              child: (taskPop == "open")
-                  ? Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.black.withOpacity(0.3),
-                      child: Center(
-                        child: InkWell(
-                          onTap: closeTaskPop,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Colors.white),
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            width: MediaQuery.of(context).size.width * 0.7,
+                    : Container(),
+              )
+            ],
+          ),
+        ),
+      );
+  Widget buildPage1(String text) => Center(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(20),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                InkWell(
-                                  onTap: openNewTask,
-                                  child: Container(
-                                    child: Text(
-                                      "Add Task",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 1,
-                                  margin: EdgeInsets.symmetric(horizontal: 30),
-                                  color: Colors.black.withOpacity(0.2),
-                                ),
-                                InkWell(
-                                  onTap: openNewCheckList,
-                                  child: Container(
-                                    child: Text(
-                                      "Add Reminder",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1,
+                                Text(
+                                  "Today ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey),
                                 )
                               ],
                             ),
                           ),
-                        ),
+                          taskWidget(Color(0xfff96060), "Meeting with love",
+                              "9:00 AM"),
+                          taskWidget(
+                              Colors.blue, "Meeting with someone", "9:00 AM"),
+                          taskWidget(
+                              Colors.green, "Take your medicines", "9:00 AM"),
+                        ],
                       ),
-                    )
-                  : Container(),
-            )
-          ],
+                    ),
+                  ),
+                  Container(
+                    height: 110,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            height: 90,
+                            width: MediaQuery.of(context).size.width,
+                            color: Color(0xff292e4e),
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  width: 80,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 25,
+                          left: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: openTaskPop,
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [Color(0xfff96060), Colors.red],
+                                  ),
+                                  shape: BoxShape.circle),
+                              child: Center(
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                      fontSize: 40, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Container(
+                child: (taskPop == "open")
+                    ? Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Center(
+                          child: InkWell(
+                            onTap: closeTaskPop,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white),
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    height: 1,
+                                  ),
+                                  InkWell(
+                                    onTap: openNewTask,
+                                    child: Container(
+                                      child: Text(
+                                        "Add Task",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 1,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    color: Colors.black.withOpacity(0.2),
+                                  ),
+                                  InkWell(
+                                    onTap: openNewCheckList,
+                                    child: Container(
+                                      child: Text(
+                                        "Add Reminder",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 1,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
+              )
+            ],
+          ),
         ),
-      ));
+      );
 
   openNewTask() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => NewTask()));

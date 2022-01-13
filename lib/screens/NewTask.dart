@@ -230,6 +230,15 @@ class _newTaskState extends State<newTask> {
                           SizedBox(
                             height: 20,
                           ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            color: Colors.grey.withOpacity(0.2),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  hintText: "Clock", border: InputBorder.none),
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
                           SizedBox(
                             height: 20,
                           ),
