@@ -17,6 +17,7 @@ class NotesWidget extends StatefulWidget {
 class _NotesWidgetState extends State<NotesWidget> {
   var _formKey = GlobalKey<FormState>();
   String notes;
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class _NotesWidgetState extends State<NotesWidget> {
           : Center(child: Text("Add Notes")),
       floatingActionButton: FloatingActionButton(
         mini: false,
-        backgroundColor: kPrimaryLightColor,
+        backgroundColor: Colors.purple,
         onPressed: () {
           _settingModalBottomSheet(context);
         },

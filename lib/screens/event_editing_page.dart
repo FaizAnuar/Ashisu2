@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:Ashisu/utils.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:date_format/date_format.dart';
 
 class EventEditingPage extends StatefulWidget {

@@ -1,3 +1,4 @@
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:flutter/material.dart';
 import 'timetable.dart';
 
@@ -18,7 +19,10 @@ class newTask extends StatefulWidget {
 }
 
 class _newTaskState extends State<newTask> {
+  var _formKey = GlobalKey<FormState>();
+
   String Day;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,16 +72,35 @@ class _newTaskState extends State<newTask> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 25,
+                      height: 10,
                     ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      color: Colors.grey.withOpacity(0.2),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            hintText: "Title", border: InputBorder.none),
-                        style: TextStyle(fontSize: 18),
+                    TextFormField(
+                      maxLength: taskHeaderMaxLenth,
+                      textAlign: TextAlign.center,
+                      controller: taskHeadingController,
+                      decoration: InputDecoration(
+                        fillColor: Colors.blue,
+                        hintText: "Title",
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(
+                            width: 5.0,
+                          ),
+                        ),
                       ),
+
+                      // ignore: missing_return
+                      validator: (String noteHeading) {
+                        if (noteHeading.isEmpty) {
+                          return "Please enter task Heading";
+                        } else if (noteHeading.startsWith(" ")) {
+                          return "Please avoid whitespaces";
+                        }
+                      },
+                      onFieldSubmitted: (String value) {
+                        FocusScope.of(context)
+                            .requestFocus(textSecondFocusNode);
+                      },
                     ),
                     SizedBox(
                       height: 15,
@@ -98,13 +121,16 @@ class _newTaskState extends State<newTask> {
                             height: 150,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15)),
-                                border: Border.all(
-                                    color: Colors.grey.withOpacity(0.5))),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(15),
+                                  topLeft: Radius.circular(15)),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.5),
+                              ),
+                            ),
                             child: TextField(
+                              textAlign: TextAlign.center,
                               maxLines: 6,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -132,6 +158,7 @@ class _newTaskState extends State<newTask> {
                                       Icons.attach_file,
                                       color: Colors.grey,
                                     ),
+                                    onPressed: () {},
                                   ),
                                 )
                               ],
@@ -234,8 +261,9 @@ class _newTaskState extends State<newTask> {
                             padding: EdgeInsets.all(10),
                             color: Colors.grey.withOpacity(0.2),
                             child: TextField(
+                              textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                  hintText: "Clock", border: InputBorder.none),
+                                  hintText: "Time", border: InputBorder.none),
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
@@ -256,7 +284,7 @@ class _newTaskState extends State<newTask> {
                                     color: Colors.white, fontSize: 18),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )

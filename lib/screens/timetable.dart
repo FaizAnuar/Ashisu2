@@ -1,3 +1,4 @@
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/screens/select.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TimetablePage extends StatelessWidget {
+  static ValueNotifier<String> taskValue = ValueNotifier('');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,6 +26,8 @@ class timetablePage extends StatefulWidget {
 }
 
 class _timetablePageState extends State<timetablePage> {
+  static ValueNotifier<String> taskValue = ValueNotifier('');
+
   String filterType = "today";
   DateTime today = new DateTime.now();
   String taskPop = "close";
@@ -41,6 +46,7 @@ class _timetablePageState extends State<timetablePage> {
     "DEC"
   ];
   CalendarController ctrlr = new CalendarController();
+
   @override
   Widget build(BuildContext context) => DefaultTabController(
         length: 7,
@@ -134,12 +140,16 @@ class _timetablePageState extends State<timetablePage> {
                               ],
                             ),
                           ),
-                          taskWidget(Color(0xfff96060), "Meeting with someone",
-                              "9:00 AM"),
-                          taskWidget(
-                              Colors.blue, "Meeting with someone", "9:00 AM"),
-                          taskWidget(
-                              Colors.green, "Take your medicines", "9:00 AM"),
+                          ValueListenableBuilder(
+                            valueListenable: taskValue,
+                            builder: (BuildContext context, String newValue,
+                                Widget child) {
+                              return Text(
+                                newValue,
+                                style: TextStyle(fontSize: 18),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -258,6 +268,7 @@ class _timetablePageState extends State<timetablePage> {
           ),
         ),
       );
+
   Widget buildPage1(String text) => Center(
         child: Scaffold(
           body: Stack(
