@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:Ashisu/models/NotesPage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NotesWidget extends StatefulWidget {
   NotesWidget({Key key}) : super(key: key);
@@ -17,19 +18,13 @@ class NotesWidget extends StatefulWidget {
 class _NotesWidgetState extends State<NotesWidget> {
   var _formKey = GlobalKey<FormState>();
   String notes;
+  final usersRef = FirebaseFirestore.instance.collection('Users');
 
   @override
   void initState() {
     super.initState();
     notesDescriptionMaxLenth =
         notesDescriptionMaxLines * notesDescriptionMaxLines;
-  }
-
-  @override
-  void dispose() {
-    noteDescriptionController.dispose();
-    noteHeadingController.dispose();
-    super.dispose();
   }
 
   @override
@@ -41,8 +36,7 @@ class _NotesWidgetState extends State<NotesWidget> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SelectPage()));
+            Navigator.pop(context);
           },
         ),
         flexibleSpace: Container(
@@ -55,9 +49,7 @@ class _NotesWidgetState extends State<NotesWidget> {
           ),
         ),
       ),
-      body: noteHeading.length > 0
-          ? buildNotes()
-          : Center(child: Text("Add Notes")),
+      body: buildNotes(),
       floatingActionButton: FloatingActionButton(
         mini: false,
         backgroundColor: Colors.purple,
@@ -70,124 +62,156 @@ class _NotesWidgetState extends State<NotesWidget> {
   }
 
   Widget buildNotes() {
+    int lengthNotes;
+
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
         left: 10,
         right: 10,
       ),
-      child: new ListView.builder(
-        itemCount: noteHeading.length,
-        itemBuilder: (context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 5.5),
-            child: new Dismissible(
-              key: UniqueKey(),
-              direction: DismissDirection.horizontal,
-              onDismissed: (direction) {
-                setState(() {
-                  deletedNoteHeading = noteHeading[index];
-                  deletedNoteDescription = noteDescription[index];
-                  noteHeading.removeAt(index);
-                  noteDescription.removeAt(index);
-                  Scaffold.of(context).showSnackBar(
-                    new SnackBar(
-                      backgroundColor: Colors.purple,
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          new Text(
-                            "Note Deleted",
-                            style: TextStyle(),
-                          ),
-                          deletedNoteHeading != ""
-                              ? GestureDetector(
-                                  onTap: () {
-                                    print("undo");
-                                    setState(() {
-                                      if (deletedNoteHeading != "") {
-                                        noteHeading.add(deletedNoteHeading);
-                                        noteDescription
-                                            .add(deletedNoteDescription);
-                                      }
-                                      deletedNoteHeading = "";
-                                      deletedNoteDescription = "";
-                                    });
-                                    var firebaseUser =
-                                        FirebaseAuth.instance.currentUser;
-                                    firestoreInstance
-                                        .collection("users")
-                                        .doc(firebaseUser.uid)
-                                        .update({
-                                      "noteHeading": FieldValue.delete(),
-                                      "noteDescription": FieldValue.delete(),
-                                    }).then((_) {
-                                      print("success!");
-                                    });
-                                  },
-                                  child: new Text(
-                                    "Undo",
+      child: FutureBuilder<DocumentSnapshot>(
+        future: usersRef.doc(uid).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data = snapshot.data.data();
+            lengthNotes = data['noteDescription'].length;
+            print("this is the notes length " + lengthNotes.toString());
+
+            if (data['noteDescription'].length > 0) {
+              return ListView.builder(
+                itemCount: lengthNotes,
+                itemBuilder: (context, int index) {
+                  return new Padding(
+                    padding: const EdgeInsets.only(bottom: 5.5),
+                    child: new Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.horizontal,
+                      onDismissed: (direction) {
+                        setState(() {
+                          //deletedNoteHeading = noteHeading[index];
+                          //deletedNoteDescription = noteDescription[index];
+                          //noteHeading.removeAt(index);
+                          //noteDescription.removeAt(index);
+                          Scaffold.of(context).showSnackBar(
+                            new SnackBar(
+                              backgroundColor: Colors.purple,
+                              content: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  new Text(
+                                    "Note Deleted",
                                     style: TextStyle(),
                                   ),
-                                )
-                              : SizedBox(),
-                        ],
+                                  deletedNoteHeading != ""
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            print("undo");
+                                            setState(() {
+                                              if (deletedNoteHeading != "") {
+                                                noteHeading
+                                                    .add(deletedNoteHeading);
+                                                noteDescription.add(
+                                                    deletedNoteDescription);
+                                              }
+                                              deletedNoteHeading = "";
+                                              deletedNoteDescription = "";
+                                            });
+                                            var firebaseUser = FirebaseAuth
+                                                .instance.currentUser;
+                                            firestoreInstance
+                                                .collection("users")
+                                                .doc(firebaseUser.uid)
+                                                .update({
+                                              "noteHeading":
+                                                  FieldValue.delete(),
+                                              "noteDescription":
+                                                  FieldValue.delete(),
+                                            }).then((_) {
+                                              print("success!");
+                                            });
+                                          },
+                                          child: new Text(
+                                            "Undo",
+                                            style: TextStyle(),
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                      },
+                      background: ClipRRect(
+                        borderRadius: BorderRadius.circular(5.5),
+                        child: Container(
+                          color: Colors.green,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                      secondaryBackground: ClipRRect(
+                        borderRadius: BorderRadius.circular(5.5),
+                        child: Container(
+                          color: Colors.red,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: noteList(index),
                     ),
                   );
-                });
-              },
-              background: ClipRRect(
-                borderRadius: BorderRadius.circular(5.5),
-                child: Container(
-                  color: Colors.green,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "Delete",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                },
+              );
+            }
+          }
+          return Container(
+            color: Colors.transparent,
+            child: Center(
+              child: SpinKitChasingDots(
+                color: Color(0xffFFD119),
+                size: 50,
               ),
-              secondaryBackground: ClipRRect(
-                borderRadius: BorderRadius.circular(5.5),
-                child: Container(
-                  color: Colors.red,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "Delete",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              child: noteList(index),
             ),
           );
         },
@@ -196,6 +220,7 @@ class _NotesWidgetState extends State<NotesWidget> {
   }
 
   Widget noteList(int index) {
+    print("this is index in notelist " + index.toString());
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.5),
       child: Container(
@@ -222,15 +247,37 @@ class _NotesWidgetState extends State<NotesWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Flexible(
-                        child: Text(
-                          noteHeading[index],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20.00,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        child: FutureBuilder<DocumentSnapshot>(
+                            future: usersRef.doc(uid).get(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("Something went wrong");
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                Map<String, dynamic> data =
+                                    snapshot.data.data();
+                                return Text(
+                                  data['noteHeading'][index].toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20.00,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                );
+                              }
+                              return Container(
+                                color: Colors.transparent,
+                                child: Center(
+                                  child: SpinKitChasingDots(
+                                    color: Color(0xffFFD119),
+                                    size: 50,
+                                  ),
+                                ),
+                              );
+                            }),
                       ),
                       SizedBox(
                         height: 2.5,
@@ -238,15 +285,37 @@ class _NotesWidgetState extends State<NotesWidget> {
                       Flexible(
                         child: Container(
                           height: double.infinity,
-                          child: AutoSizeText(
-                            "${(noteDescription[index])}",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 15.00,
-                              color: Colors.black,
-                            ),
-                          ),
+                          child: FutureBuilder<DocumentSnapshot>(
+                              future: usersRef.doc(uid).get(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text("Something went wrong");
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  Map<String, dynamic> data =
+                                      snapshot.data.data();
+                                  return AutoSizeText(
+                                    data['noteDescription'][index].toString(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 15.00,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: SpinKitChasingDots(
+                                      color: Color(0xffFFD119),
+                                      size: 50,
+                                    ),
+                                  ),
+                                );
+                              }),
                         ),
                       ),
                     ],

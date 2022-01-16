@@ -244,15 +244,6 @@ class _timetablePageState extends State<timetablePage> {
                                         EdgeInsets.symmetric(horizontal: 30),
                                     color: Colors.black.withOpacity(0.2),
                                   ),
-                                  InkWell(
-                                    onTap: openNewCheckList,
-                                    child: Container(
-                                      child: Text(
-                                        "Add Reminder",
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                  ),
                                   SizedBox(
                                     height: 1,
                                   )
@@ -396,15 +387,6 @@ class _timetablePageState extends State<timetablePage> {
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 30),
                                     color: Colors.black.withOpacity(0.2),
-                                  ),
-                                  InkWell(
-                                    onTap: openNewCheckList,
-                                    child: Container(
-                                      child: Text(
-                                        "Add Reminder",
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
                                   ),
                                   SizedBox(
                                     height: 1,

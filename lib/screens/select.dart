@@ -1,4 +1,5 @@
 import 'package:Ashisu/screens/notes_widget.dart';
+import 'package:Ashisu/screens/sign_in.dart';
 import 'package:Ashisu/screens/timetable.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,7 +29,7 @@ class _SelectPageState extends State<SelectPage> {
 
     uid = user.uid;
     return Scaffold(
-      backgroundColor: Colors.deepPurple[50],
+      backgroundColor: Color(0xFFE0DFF9),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -40,8 +41,11 @@ class _SelectPageState extends State<SelectPage> {
               style: TextStyle(color: Color(0xFF5C0B68)),
             ),
             onPressed: () async {
-              await _auth.signOut();
-              Navigator.pop(context);
+              await auth.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SignIn()),
+              );
             },
           ),
         ],
