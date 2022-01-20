@@ -93,10 +93,10 @@ class _NotesWidgetState extends State<NotesWidget> {
                       direction: DismissDirection.horizontal,
                       onDismissed: (direction) {
                         setState(() {
-                          //deletedNoteHeading = noteHeading[index];
-                          //deletedNoteDescription = noteDescription[index];
-                          //noteHeading.removeAt(index);
-                          //noteDescription.removeAt(index);
+                          deletedNoteHeading = noteHeading[index];
+                          deletedNoteDescription = noteDescription[index];
+                          noteHeading.removeAt(index);
+                          noteDescription.removeAt(index);
                           Scaffold.of(context).showSnackBar(
                             new SnackBar(
                               backgroundColor: Colors.purple,

@@ -1,6 +1,10 @@
 import 'package:Ashisu/models/timetablePage.dart';
+import 'package:Ashisu/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ink_widget/ink_widget.dart';
 import 'timetable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewTask extends StatelessWidget {
   @override
@@ -14,14 +18,38 @@ class NewTask extends StatelessWidget {
 }
 
 class newTask extends StatefulWidget {
+  newTask({Key key}) : super(key: key);
+
   @override
   _newTaskState createState() => _newTaskState();
 }
 
 class _newTaskState extends State<newTask> {
+  List<bool> isSelected = [false, false];
   var _formKey = GlobalKey<FormState>();
-
   String Day;
+  TimeOfDay selectedTime = TimeOfDay.now();
+  final usersRef = FirebaseFirestore.instance.collection('Users');
+
+  @override
+  void initState() {
+    super.initState();
+    taskDescriptionMaxLength =
+        taskDescriptionMaxLines * taskDescriptionMaxLines;
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+    );
+    if (timeOfDay != null && timeOfDay != selectedTime) {
+      setState(() {
+        selectedTime = timeOfDay;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +73,8 @@ class _newTaskState extends State<newTask> {
           },
         ),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
+      body: Form(
+        key: _formKey,
         child: Stack(
           children: [
             Container(
@@ -75,9 +103,9 @@ class _newTaskState extends State<newTask> {
                       height: 10,
                     ),
                     TextFormField(
-                      maxLength: taskHeaderMaxLenth,
-                      textAlign: TextAlign.center,
+                      maxLength: taskHeaderMaxLength,
                       controller: taskHeadingController,
+                      textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         fillColor: Colors.blue,
                         hintText: "Title",
@@ -88,14 +116,13 @@ class _newTaskState extends State<newTask> {
                           ),
                         ),
                       ),
-
-                      // ignore: missing_return
-                      validator: (String noteHeading) {
-                        if (noteHeading.isEmpty) {
+                      validator: (String taskHeading) {
+                        if (taskHeading.isEmpty) {
                           return "Please enter task Heading";
-                        } else if (noteHeading.startsWith(" ")) {
+                        } else if (taskHeading.startsWith(" ")) {
                           return "Please avoid whitespaces";
                         }
+                        return null;
                       },
                       onFieldSubmitted: (String value) {
                         FocusScope.of(context)
@@ -129,14 +156,27 @@ class _newTaskState extends State<newTask> {
                                 color: Colors.grey.withOpacity(0.5),
                               ),
                             ),
-                            child: TextField(
+                            child: TextFormField(
+                              focusNode: textSecondFocusNode,
+                              maxLines: taskDescriptionMaxLines,
+                              maxLength: taskDescriptionMaxLength,
+                              controller: taskDescriptionController,
                               textAlign: TextAlign.center,
-                              maxLines: 6,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Add description here",
                               ),
                               style: TextStyle(fontSize: 18),
+                              validator: (String taskDescription) {
+                                if (taskDescription.isEmpty) {
+                                  return "Please enter Note Desc";
+                                } else {
+                                  if (taskDescription.startsWith(" ")) {
+                                    return "Please avoid whitespaces";
+                                  }
+                                  return null;
+                                }
+                              },
                             ),
                           ),
                           Container(
@@ -168,120 +208,132 @@ class _newTaskState extends State<newTask> {
                             height: 20,
                           ),
                           Text(
-                            "Color",
+                            "Urgency :",
                             style: TextStyle(fontSize: 18),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.pink),
-                              ),
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.blue),
-                              ),
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.green),
-                              ),
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: Color(0xfff4ca8f)),
-                              ),
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: Color(0xff3d3a62)),
-                              )
+                          ToggleButtons(
+                            borderColor: Colors.grey[200],
+                            borderWidth: 5,
+                            fillColor: Colors.deepOrange[100],
+                            borderRadius: BorderRadius.circular(10.0),
+                            selectedBorderColor: Colors.deepOrange,
+                            children: <Widget>[
+                              Text('Urgent', style: TextStyle(fontSize: 18)),
+                              Text('Not Urgent',
+                                  style: TextStyle(fontSize: 18)),
                             ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          DropdownButton<String>(
-                            value: Day,
-                            //elevation: 5,
-                            style: TextStyle(color: Colors.black),
-
-                            items: <String>[
-                              'Monday',
-                              'Tuesday',
-                              'Wednesday',
-                              'Thursday',
-                              'Friday',
-                              'Saturday',
-                              'Sunday',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            hint: Text(
-                              "Please choose a Day",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            onChanged: (String value) {
+                            onPressed: (int index) {
                               setState(() {
-                                Day = value;
+                                for (int buttonIndex = 0;
+                                    buttonIndex < isSelected.length;
+                                    buttonIndex++) {
+                                  if (buttonIndex == index) {
+                                    isSelected[buttonIndex] = true;
+                                  } else {
+                                    isSelected[buttonIndex] = false;
+                                  }
+                                }
                               });
                             },
+                            isSelected: isSelected,
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            color: Colors.grey.withOpacity(0.2),
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                  hintText: "Time", border: InputBorder.none),
-                              style: TextStyle(fontSize: 18),
+                          RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            elevation: 4.0,
+                            onPressed: () => _selectTime(context),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 50.0,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.access_alarms_rounded,
+                                              size: 18.0,
+                                              color: Colors.teal,
+                                            ),
+                                            Text(
+                                              "${selectedTime.hour}:${selectedTime.minute}",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.purple,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20.0),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    "  Change",
+                                    style: TextStyle(
+                                        color: Colors.teal,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0),
+                                  ),
+                                ],
+                              ),
                             ),
+                            color: Colors.white,
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                color: Color(0xffff96060)),
-                            child: Center(
-                              child: Text(
-                                "Add Task",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                          GestureDetector(
+                            onTap: () {
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  taskHeading.add(taskHeadingController.text);
+                                  taskDescription
+                                      .add(taskDescriptionController.text);
+                                  taskHeadingController.clear();
+                                  taskDescriptionController.clear();
+                                });
+                                var firebaseUser =
+                                    FirebaseAuth.instance.currentUser;
+                                firestoreInstance
+                                    .collection("Users")
+                                    .doc(firebaseUser.uid)
+                                    .set({
+                                  "taskHeading": taskHeading,
+                                  "taskDescription": taskDescription,
+                                }, SetOptions(merge: true)).then((_) {
+                                  print("success!");
+                                });
+                              }
+                              print("Notes.dart LineNo:239");
+                              print(taskHeadingController.text);
+
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => TimetablePage()));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  color: Color(0xffff96060)),
+                              child: Center(
+                                child: Text(
+                                  "Add Task",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                               ),
                             ),
                           ),

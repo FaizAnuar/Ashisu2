@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,6 +19,10 @@ Future<void> userSetup(String displayName, String email) async {
   users.doc(uid).set({
     'noteHeading': noteHeading,
     'noteDescription': noteDescription,
+  });
+  users.doc(uid).set({
+    'taskHeading': taskHeading,
+    'taskDescription': taskDescription,
   });
 
   return;
