@@ -46,8 +46,8 @@ class CalendarWidget extends StatelessWidget {
       ),
       body: Container(
         child: SfCalendar(
-          view: CalendarView.month,
-          cellBorderColor: Colors.transparent,
+          view: CalendarView.week,
+          cellBorderColor: Colors.grey[400],
         ),
       ),
     );

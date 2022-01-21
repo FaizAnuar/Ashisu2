@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'CheckList.dart';
 import 'NewTask.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -109,13 +108,13 @@ class _timetablePageState extends State<timetablePage> {
           ),
           body: TabBarView(
             children: [
-              buildPage('Monday'),
+              buildPage('m'),
               buildPage('t'),
               buildPage('w'),
               buildPage('t'),
               buildPage('f'),
               buildPage('s'),
-              buildPage('sun'),
+              buildPage('s'),
             ],
           ),
         ),
@@ -127,7 +126,7 @@ class _timetablePageState extends State<timetablePage> {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -142,23 +141,46 @@ class _timetablePageState extends State<timetablePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Today ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
+                                  "Urgent",
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.grey),
+                                      fontSize: 18, color: Colors.red),
                                 )
                               ],
                             ),
                           ),
                           buildTask(),
-                          Container(
-                            child: buildTask(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                          taskWidget(Color(0xfff96060), "Meeting with love",
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Not Urgent",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.green),
+                                )
+                              ],
+                            ),
+                          ),
+                          taskWidget(Color(0xfff96060), "Meeting with someone",
                               "9:00 AM"),
                           taskWidget(
                               Colors.blue, "Meeting with someone", "9:00 AM"),
                           taskWidget(
                               Colors.green, "Take your medicines", "9:00 AM"),
+                          buildTask(),
                         ],
                       ),
                     ),
@@ -189,7 +211,7 @@ class _timetablePageState extends State<timetablePage> {
                           left: 0,
                           right: 0,
                           child: InkWell(
-                            onTap: openTaskPop,
+                            onTap: openNewTask,
                             child: Container(
                               height: 80,
                               width: 80,
@@ -215,55 +237,6 @@ class _timetablePageState extends State<timetablePage> {
                   )
                 ],
               ),
-              Container(
-                child: (taskPop == "open")
-                    ? Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.black.withOpacity(0.3),
-                        child: Center(
-                          child: InkWell(
-                            onTap: closeTaskPop,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.white),
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  SizedBox(
-                                    height: 1,
-                                  ),
-                                  InkWell(
-                                    onTap: openNewTask,
-                                    child: Container(
-                                      child: Text(
-                                        "Add Task",
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 1,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 30),
-                                    color: Colors.black.withOpacity(0.2),
-                                  ),
-                                  SizedBox(
-                                    height: 1,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
-              )
             ],
           ),
         ),
@@ -271,11 +244,6 @@ class _timetablePageState extends State<timetablePage> {
 
   openNewTask() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => NewTask()));
-  }
-
-  openNewCheckList() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CheckList()));
   }
 
   openTaskPop() {
@@ -310,15 +278,11 @@ class _timetablePageState extends State<timetablePage> {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
-          if (snapshot.data != null) {
-            return Container(
-              child: Text(""),
-            );
-          }
+
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data = snapshot.data.data();
             lengthTask = data['taskDescription'].length;
-            print("this is the notes length " + lengthTask.toString());
+            print("this is the task length " + lengthTask.toString());
 
             if (data['taskDescription'].length > 0) {
               return ListView.builder(

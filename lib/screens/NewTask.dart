@@ -25,7 +25,9 @@ class newTask extends StatefulWidget {
 }
 
 class _newTaskState extends State<newTask> {
-  List<bool> isSelected = [false, false];
+  List<bool> isSelected = [true, false];
+  List<String> timeList;
+  int selection = 0;
   var _formKey = GlobalKey<FormState>();
   String Day;
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -208,7 +210,7 @@ class _newTaskState extends State<newTask> {
                             height: 20,
                           ),
                           Text(
-                            "Urgency :",
+                            "Urgent :",
                             style: TextStyle(fontSize: 18),
                           ),
                           SizedBox(
@@ -236,6 +238,7 @@ class _newTaskState extends State<newTask> {
                                     isSelected[buttonIndex] = false;
                                   }
                                 }
+                                selection = index;
                               });
                             },
                             isSelected: isSelected,
@@ -250,7 +253,7 @@ class _newTaskState extends State<newTask> {
                             onPressed: () => _selectTime(context),
                             child: Container(
                               alignment: Alignment.center,
-                              height: 50.0,
+                              height: 75.0,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -300,6 +303,9 @@ class _newTaskState extends State<newTask> {
                                   taskHeading.add(taskHeadingController.text);
                                   taskDescription
                                       .add(taskDescriptionController.text);
+                                  taskTime.add(
+                                      ("${selectedTime.hour}:${selectedTime.minute}")
+                                          .toString());
                                   taskHeadingController.clear();
                                   taskDescriptionController.clear();
                                 });
@@ -309,13 +315,14 @@ class _newTaskState extends State<newTask> {
                                     .collection("Users")
                                     .doc(firebaseUser.uid)
                                     .set({
+                                  "urgency": selection,
                                   "taskHeading": taskHeading,
                                   "taskDescription": taskDescription,
+                                  "selectedTime": taskTime,
                                 }, SetOptions(merge: true)).then((_) {
                                   print("success!");
                                 });
                               }
-                              print("Notes.dart LineNo:239");
                               print(taskHeadingController.text);
 
                               Navigator.of(context).push(MaterialPageRoute(
