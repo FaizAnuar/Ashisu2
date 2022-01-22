@@ -1,3 +1,4 @@
+import 'package:Ashisu/screens/register.dart';
 import 'package:Ashisu/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/shared/constants.dart';
@@ -130,7 +131,10 @@ class _SignInState extends State<SignIn> {
 
   Widget _createAccountLabel() {
     return InkWell(
-      onTap: () => widget.toggleView(),
+      onTap: () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Register()));
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.all(15),

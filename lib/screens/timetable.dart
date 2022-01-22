@@ -34,8 +34,6 @@ class timetablePage extends StatefulWidget {
 }
 
 class _timetablePageState extends State<timetablePage> {
-  static ValueNotifier<String> taskValue = ValueNotifier('');
-
   String filterType = "today";
   DateTime today = new DateTime.now();
   String taskPop = "close";
@@ -278,7 +276,11 @@ class _timetablePageState extends State<timetablePage> {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
-
+          if (snapshot.data != null) {
+            return Container(
+              child: Text(""),
+            );
+          }
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data = snapshot.data.data();
             lengthTask = data['taskDescription'].length;
@@ -424,7 +426,7 @@ class _timetablePageState extends State<timetablePage> {
   Widget TaskList(int index) {
     final usersRef = FirebaseFirestore.instance.collection('Users');
 
-    print("this is index in notelist " + index.toString());
+    print("this is index in Tasklist " + index.toString());
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.5),
       child: Container(
@@ -502,6 +504,42 @@ class _timetablePageState extends State<timetablePage> {
                                       snapshot.data.data();
                                   return AutoSizeText(
                                     data['taskDescription'][index].toString(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 15.00,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: SpinKitChasingDots(
+                                      color: Color(0xffFFD119),
+                                      size: 50,
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                      Flexible(
+                        child: Container(
+                          height: double.infinity,
+                          child: FutureBuilder<DocumentSnapshot>(
+                              future: usersRef.doc(uid).get(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text("Something went wrong");
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  Map<String, dynamic> data =
+                                      snapshot.data.data();
+                                  return AutoSizeText(
+                                    data['selectedTime'][index].toString(),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 final List<String> taskDescription = [];
 final List<String> taskHeading = [];
 final List<String> taskTime = [];
+final List<String> selection = [];
 TextEditingController taskHeadingController = new TextEditingController();
 TextEditingController taskDescriptionController = new TextEditingController();
 TextEditingController taskTimeController = new TextEditingController();
+TextEditingController selectionController = new TextEditingController();
 
 FocusNode textSecondFocusNode = new FocusNode();
 

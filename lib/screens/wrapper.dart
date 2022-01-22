@@ -13,22 +13,6 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  int userType = 0;
-
-  Future getUsersType(String uid) async {
-    final usersRef = FirebaseFirestore.instance.collection('Users');
-
-    /*await usersRef.doc(uid).get().then((ds){
-        userType=ds.data['userType'];
-        print(userType);
-      }).catchError((e){
-        print(e);
-      });*/
-    DocumentSnapshot variable1 = await usersRef.doc(uid).get();
-    userType = variable1['userType'];
-    print(userType);
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserId>(context);

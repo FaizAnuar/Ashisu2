@@ -42,7 +42,7 @@ class _SelectPageState extends State<SelectPage> {
             ),
             onPressed: () async {
               await auth.signOut();
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => SignIn()),
               );

@@ -15,14 +15,8 @@ Future<void> userSetup(String displayName, String email) async {
   users.doc(uid).set({
     'displayName': displayName,
     'email': email,
-  });
-  users.doc(uid).set({
     'noteHeading': noteHeading,
     'noteDescription': noteDescription,
-  });
-  users.doc(uid).set({
-    'taskHeading': taskHeading,
-    'taskDescription': taskDescription,
   });
 
   return;

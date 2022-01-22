@@ -25,17 +25,20 @@ class newTask extends StatefulWidget {
 }
 
 class _newTaskState extends State<newTask> {
-  List<bool> isSelected = [true, false];
+  String select;
+  List<bool> isSelected;
   List<String> timeList;
-  int selection = 0;
   var _formKey = GlobalKey<FormState>();
   String Day;
   TimeOfDay selectedTime = TimeOfDay.now();
   final usersRef = FirebaseFirestore.instance.collection('Users');
 
+  var index;
+
   @override
   void initState() {
     super.initState();
+    isSelected = [true, false];
     taskDescriptionMaxLength =
         taskDescriptionMaxLines * taskDescriptionMaxLines;
   }
@@ -210,35 +213,41 @@ class _newTaskState extends State<newTask> {
                             height: 20,
                           ),
                           Text(
-                            "Urgent :",
+                            "Urgency :",
                             style: TextStyle(fontSize: 18),
                           ),
                           SizedBox(
                             height: 10,
                           ),
                           ToggleButtons(
-                            borderColor: Colors.grey[200],
-                            borderWidth: 5,
-                            fillColor: Colors.deepOrange[100],
-                            borderRadius: BorderRadius.circular(10.0),
-                            selectedBorderColor: Colors.deepOrange,
+                            borderColor: Colors.black,
+                            fillColor: Colors.grey,
+                            borderWidth: 2,
+                            selectedBorderColor: Colors.black,
+                            selectedColor: Colors.white,
+                            borderRadius: BorderRadius.circular(0),
                             children: <Widget>[
-                              Text('Urgent', style: TextStyle(fontSize: 18)),
-                              Text('Not Urgent',
-                                  style: TextStyle(fontSize: 18)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Urgent',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Not Urgent',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
                             ],
                             onPressed: (int index) {
                               setState(() {
-                                for (int buttonIndex = 0;
-                                    buttonIndex < isSelected.length;
-                                    buttonIndex++) {
-                                  if (buttonIndex == index) {
-                                    isSelected[buttonIndex] = true;
-                                  } else {
-                                    isSelected[buttonIndex] = false;
-                                  }
+                                for (int i = 0; i < isSelected.length; i++) {
+                                  isSelected[i] = i == index;
                                 }
-                                selection = index;
+                                select = index.toString();
                               });
                             },
                             isSelected: isSelected,
@@ -301,29 +310,32 @@ class _newTaskState extends State<newTask> {
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   taskHeading.add(taskHeadingController.text);
+                                  print(taskHeadingController.text);
                                   taskDescription
                                       .add(taskDescriptionController.text);
                                   taskTime.add(
                                       ("${selectedTime.hour}:${selectedTime.minute}")
                                           .toString());
+                                  selection.add(select);
+                                  selectionController.clear();
                                   taskHeadingController.clear();
                                   taskDescriptionController.clear();
-                                });
-                                var firebaseUser =
-                                    FirebaseAuth.instance.currentUser;
-                                firestoreInstance
-                                    .collection("Users")
-                                    .doc(firebaseUser.uid)
-                                    .set({
-                                  "urgency": selection,
-                                  "taskHeading": taskHeading,
-                                  "taskDescription": taskDescription,
-                                  "selectedTime": taskTime,
-                                }, SetOptions(merge: true)).then((_) {
-                                  print("success!");
+
+                                  var firebaseUser =
+                                      FirebaseAuth.instance.currentUser;
+                                  firestoreInstance
+                                      .collection("Users")
+                                      .doc(firebaseUser.uid)
+                                      .set({
+                                    "urgency": selection,
+                                    "taskHeading": taskHeading,
+                                    "taskDescription": taskDescription,
+                                    "selectedTime": taskTime,
+                                  }, SetOptions(merge: true)).then((_) {
+                                    print("success!");
+                                  });
                                 });
                               }
-                              print(taskHeadingController.text);
 
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => TimetablePage()));

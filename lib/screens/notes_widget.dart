@@ -79,10 +79,9 @@ class _NotesWidgetState extends State<NotesWidget> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data = snapshot.data.data();
-            lengthNotes = data['noteDescription'].length;
-            print("this is the notes length " + lengthNotes.toString());
 
-            if (data['noteDescription'].length > 0) {
+            if (data['noteDescription'].length != null) {
+              lengthNotes = data['noteDescription'].length;
               return ListView.builder(
                 itemCount: lengthNotes,
                 itemBuilder: (context, int index) {
@@ -125,13 +124,15 @@ class _NotesWidgetState extends State<NotesWidget> {
                                             var firebaseUser = FirebaseAuth
                                                 .instance.currentUser;
                                             firestoreInstance
-                                                .collection("users")
+                                                .collection("Users")
                                                 .doc(firebaseUser.uid)
                                                 .update({
                                               "noteHeading":
-                                                  FieldValue.delete(),
+                                                  FieldValue.arrayRemove(
+                                                      [index]),
                                               "noteDescription":
-                                                  FieldValue.delete(),
+                                                  FieldValue.arrayRemove(
+                                                      [index]),
                                             }).then((_) {
                                               print("success!");
                                             });
@@ -375,6 +376,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                                       .add(noteDescriptionController.text);
                                   noteHeadingController.clear();
                                   noteDescriptionController.clear();
+                                  Navigator.pop(context);
                                 });
                                 var firebaseUser =
                                     FirebaseAuth.instance.currentUser;
@@ -388,8 +390,6 @@ class _NotesWidgetState extends State<NotesWidget> {
                                   print("success!");
                                 });
                               }
-                              print("Notes.dart LineNo:239");
-                              print(noteHeadingController.text);
                             },
                             child: Container(
                               child: Row(

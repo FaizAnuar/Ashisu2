@@ -133,7 +133,10 @@ class _RegisterState extends State<Register> {
 
   Widget _createAccountLabel() {
     return InkWell(
-      onTap: () => widget.toggleView(),
+      onTap: () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Register()));
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.all(15),
