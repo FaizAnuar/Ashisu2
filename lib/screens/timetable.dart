@@ -276,18 +276,15 @@ class _timetablePageState extends State<timetablePage> {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
-          if (snapshot.data != null) {
-            return Container(
-              child: Text(""),
-            );
-          }
+
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data = snapshot.data.data();
             lengthTask = data['taskDescription'].length;
-            print("this is the task length " + lengthTask.toString());
 
             if (data['taskDescription'].length > 0) {
               return ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 itemCount: lengthTask,
                 itemBuilder: (context, int index) {
                   return new Padding(
@@ -301,6 +298,17 @@ class _timetablePageState extends State<timetablePage> {
                           deletedTaskDescription = taskDescription[index];
                           taskHeading.removeAt(index);
                           taskDescription.removeAt(index);
+                          var firebaseUser = FirebaseAuth.instance.currentUser;
+                          firestoreInstance
+                              .collection("Users")
+                              .doc(firebaseUser.uid)
+                              .update({
+                            "taskHeading": taskHeading,
+                            "taskDescription": taskDescription,
+                            "selectedTime": selection,
+                          }).then((_) {
+                            print("success!");
+                          });
                           Scaffold.of(context).showSnackBar(
                             new SnackBar(
                               backgroundColor: Colors.purple,
@@ -316,28 +324,32 @@ class _timetablePageState extends State<timetablePage> {
                                       ? GestureDetector(
                                           onTap: () {
                                             print("undo");
+                                            print(deletedTaskHeading[index]);
                                             setState(() {
-                                              if (deletedTaskHeading != "") {
-                                                taskHeading
-                                                    .add(deletedTaskHeading);
+                                              var firebaseUser = FirebaseAuth
+                                                  .instance.currentUser;
+                                              firestoreInstance
+                                                  .collection("Users")
+                                                  .doc(firebaseUser.uid)
+                                                  .set({
+                                                "taskHeading":
+                                                    deletedTaskHeading,
+                                                "taskDescription":
+                                                    deletedTaskDescription,
+                                                "selectedTime": deletedTaskTime,
+                                              }, SetOptions(merge: true)).then(
+                                                      (_) {
+                                                print("success!");
+                                              });
+                                              if (deletedTaskHeading != null) {
+                                                taskHeading.add(
+                                                    deletedTaskHeading[index]);
                                                 taskDescription.add(
-                                                    deletedTaskDescription);
+                                                    deletedTaskDescription[
+                                                        index]);
+                                                taskTime.add(
+                                                    deletedTaskTime[index]);
                                               }
-                                              deletedTaskHeading = "";
-                                              deletedTaskDescription = "";
-                                            });
-                                            var firebaseUser = FirebaseAuth
-                                                .instance.currentUser;
-                                            firestoreInstance
-                                                .collection("users")
-                                                .doc(firebaseUser.uid)
-                                                .update({
-                                              "noteHeading":
-                                                  FieldValue.delete(),
-                                              "noteDescription":
-                                                  FieldValue.delete(),
-                                            }).then((_) {
-                                              print("success!");
                                             });
                                           },
                                           child: new Text(
@@ -426,7 +438,6 @@ class _timetablePageState extends State<timetablePage> {
   Widget TaskList(int index) {
     final usersRef = FirebaseFirestore.instance.collection('Users');
 
-    print("this is index in Tasklist " + index.toString());
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.5),
       child: Container(

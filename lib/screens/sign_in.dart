@@ -16,6 +16,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final usersRef = FirebaseFirestore.instance.collection('Users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   bool loading = false;

@@ -21,18 +21,20 @@ class _NotesWidgetState extends State<NotesWidget> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid;
+  int firebaseArrLength;
 
   @override
   void initState() {
     super.initState();
+    User user = _auth.currentUser;
+    uid = user.uid;
+    getFirebaseNotesLength();
     notesDescriptionMaxLenth =
         notesDescriptionMaxLines * notesDescriptionMaxLines;
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = _auth.currentUser;
-    uid = user.uid;
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),
@@ -58,6 +60,7 @@ class _NotesWidgetState extends State<NotesWidget> {
         mini: false,
         backgroundColor: Colors.purple,
         onPressed: () {
+          getFirebaseNotesLength();
           _settingModalBottomSheet(context);
         },
         child: Icon(Icons.create),
@@ -236,7 +239,6 @@ class _NotesWidgetState extends State<NotesWidget> {
   }
 
   Widget noteList(int index) {
-    print("this is index in notelist " + index.toString());
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.5),
       child: Container(
@@ -345,6 +347,20 @@ class _NotesWidgetState extends State<NotesWidget> {
     );
   }
 
+  void getFirebaseNotesLength() {
+    usersRef.doc(uid).get().then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      setState(() {
+        firebaseArrLength = fields['noteHeading'].length;
+      });
+    });
+  }
+
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
       context: context,
@@ -384,59 +400,46 @@ class _NotesWidgetState extends State<NotesWidget> {
                           ),
                           GestureDetector(
                             onTap: () {
+                              // List<String> tempNote;
+                              // List<String> tempDesc;
+                              // print(firebaseArrLength);
+
                               if (_formKey.currentState.validate()) {
                                 setState(() {
+                                  print("in gestrure detector on tap");
                                   noteHeading.add(noteHeadingController.text);
                                   noteDescription
                                       .add(noteDescriptionController.text);
                                   noteHeadingController.clear();
                                   noteDescriptionController.clear();
 
-                                  FutureBuilder<DocumentSnapshot>(
-                                      future: usersRef.doc(uid).get(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<DocumentSnapshot>
-                                              snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Text("");
-                                        }
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          Map<String, dynamic> data =
-                                              snapshot.data.data();
-                                          print("inside futurebuilder");
-                                          List<String> tempNote =
-                                              List.from(noteHeading);
-                                          List<String> tempDesc =
-                                              List.from(noteDescription);
-                                          int count = 0;
-                                          int noteLength =
-                                              data['noteHeading'].length();
-                                          for (int i = noteLength; i > 0; i--) {
-                                            noteHeading.removeAt(count);
-                                            noteHeading[count + 1] =
-                                                tempNote[count];
-                                            noteDescription.removeAt(count);
-                                            noteDescription[count + 1] =
-                                                tempDesc[count];
-                                            count++;
-                                          }
-                                        }
-                                        return Text("");
-                                      });
-                                  var firebaseUser =
-                                      FirebaseAuth.instance.currentUser;
-                                  firestoreInstance
-                                      .collection("Users")
-                                      .doc(firebaseUser.uid)
-                                      .set({
-                                    "noteHeading": noteHeading,
-                                    "noteDescription": noteDescription,
-                                  }, SetOptions(merge: true)).then((_) {
-                                    print("success!");
-                                  });
-                                  Navigator.pop(context);
+                                  // tempNote = List.from(noteHeading);
+                                  // tempDesc = List.from(noteDescription);
                                 });
+
+                                // int count = 0;
+                                // for (int i = firebaseArrLength; i > 0; i--) {
+                                //   tempNote.removeAt(count);
+                                //   tempNote[count + 1] = noteHeading[count];
+
+                                //   tempDesc.removeAt(count);
+                                //   tempDesc[count + 1] = tempDesc[count];
+
+                                //   count++;
+                                // }
+
+                                var firebaseUser =
+                                    FirebaseAuth.instance.currentUser;
+                                firestoreInstance
+                                    .collection("Users")
+                                    .doc(firebaseUser.uid)
+                                    .set({
+                                  "noteHeading": noteHeading,
+                                  "noteDescription": noteDescription,
+                                }, SetOptions(merge: true)).then((_) {
+                                  print("success!");
+                                });
+                                Navigator.pop(context);
                               }
                             },
                             child: Container(

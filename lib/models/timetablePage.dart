@@ -16,7 +16,8 @@ int taskDescriptionMaxLines = 10;
 int taskDescriptionMaxLength;
 String deletedTaskHeading = "";
 String deletedTaskDescription = "";
-String deletedHour = "";
+String deletedTaskTime = "";
+String deletedTaskSelection = "";
 
 List<Color> taskColor = [
   Colors.pink[50],

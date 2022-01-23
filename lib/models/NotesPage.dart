@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-final List<String> noteDescription = [];
-final List<String> noteHeading = [];
+List<String> noteDescription = [];
+List<String> noteHeading = [];
 TextEditingController noteHeadingController = new TextEditingController();
 TextEditingController noteDescriptionController = new TextEditingController();
 FocusNode textSecondFocusNode = new FocusNode();
