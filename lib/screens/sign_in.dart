@@ -1,5 +1,8 @@
 import 'package:Ashisu/screens/register.dart';
+import 'package:Ashisu/screens/select.dart';
 import 'package:Ashisu/services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:Ashisu/shared/loading.dart';
@@ -13,7 +16,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final AuthService _auth = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
@@ -96,22 +99,65 @@ class _SignInState extends State<SignIn> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                if (_formKey.currentState.validate()) {
-                                  setState(() => loading = true);
-                                  dynamic result =
-                                      await _auth.signInWithEmailAndPassword(
-                                          email, password);
-                                  if (result == null) {
+                                // if (_formKey.currentState.validate()) {
+                                //   setState(() => loading = true);
+                                //   dynamic result =
+                                //       await _auth.signInWithEmailAndPassword(
+                                //           email, password);
+                                //   if (result == null) {
+                                //     setState(() {
+                                //       error =
+                                //           'Could not sign in. Please try again';
+                                //       loading = false;
+                                //     });
+                                //   }
+                                //   if (result != null) {
+                                //     _auth.signInWithEmailAndPassword(
+                                //         email, password);
+                                //   }
+                                // }
+                                setState(() {
+                                  loading = true;
+                                });
+                                try {
+                                  await _auth.signInWithEmailAndPassword(
+                                      email: email, password: password);
+                                  String useremail =
+                                      _auth.currentUser.email.toString();
+
+                                  FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .where('email', isEqualTo: useremail)
+                                      .snapshots()
+                                      .listen((data) {
                                     setState(() {
-                                      error =
-                                          'Could not sign in. Please try again';
-                                      loading = false;
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectPage()));
                                     });
-                                  }
-                                  if (result != null) {
-                                    _auth.signInWithEmailAndPassword(
-                                        email, password);
-                                  }
+                                  });
+                                } on FirebaseAuthException catch (e) {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: Text("Ops! Login Failed"),
+                                      content: Text('${e.message}'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: Text('Okay'),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                  print("login fail");
                                 }
                               },
                             ),

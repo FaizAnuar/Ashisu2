@@ -25,7 +25,7 @@ class newTask extends StatefulWidget {
 }
 
 class _newTaskState extends State<newTask> {
-  String select;
+  String select = '0';
   List<bool> isSelected;
   List<String> timeList;
   var _formKey = GlobalKey<FormState>();

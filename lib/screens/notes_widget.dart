@@ -19,6 +19,8 @@ class _NotesWidgetState extends State<NotesWidget> {
   var _formKey = GlobalKey<FormState>();
   String notes;
   final usersRef = FirebaseFirestore.instance.collection('Users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String uid;
 
   @override
   void initState() {
@@ -29,6 +31,8 @@ class _NotesWidgetState extends State<NotesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    User user = _auth.currentUser;
+    uid = user.uid;
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),
@@ -92,10 +96,22 @@ class _NotesWidgetState extends State<NotesWidget> {
                       direction: DismissDirection.horizontal,
                       onDismissed: (direction) {
                         setState(() {
-                          deletedNoteHeading = noteHeading[index];
-                          deletedNoteDescription = noteDescription[index];
+                          deletedNoteHeading = List.from(noteHeading);
+                          deletedNoteDescription = List.from(noteDescription);
                           noteHeading.removeAt(index);
                           noteDescription.removeAt(index);
+
+                          var firebaseUser = FirebaseAuth.instance.currentUser;
+                          firestoreInstance
+                              .collection("Users")
+                              .doc(firebaseUser.uid)
+                              .update({
+                            "noteHeading": noteHeading,
+                            "noteDescription": noteDescription,
+                          }).then((_) {
+                            print("success!");
+                          });
+
                           Scaffold.of(context).showSnackBar(
                             new SnackBar(
                               backgroundColor: Colors.purple,
@@ -107,34 +123,33 @@ class _NotesWidgetState extends State<NotesWidget> {
                                     "Note Deleted",
                                     style: TextStyle(),
                                   ),
-                                  deletedNoteHeading != ""
+                                  deletedNoteHeading != null
                                       ? GestureDetector(
                                           onTap: () {
                                             print("undo");
+                                            print(deletedNoteHeading[index]);
                                             setState(() {
-                                              if (deletedNoteHeading != "") {
-                                                noteHeading
-                                                    .add(deletedNoteHeading);
+                                              var firebaseUser = FirebaseAuth
+                                                  .instance.currentUser;
+                                              firestoreInstance
+                                                  .collection("Users")
+                                                  .doc(firebaseUser.uid)
+                                                  .set({
+                                                "noteHeading":
+                                                    deletedNoteHeading,
+                                                "noteDescription":
+                                                    deletedNoteDescription,
+                                              }, SetOptions(merge: true)).then(
+                                                      (_) {
+                                                print("success!");
+                                              });
+                                              if (deletedNoteHeading != null) {
+                                                noteHeading.add(
+                                                    deletedNoteHeading[index]);
                                                 noteDescription.add(
-                                                    deletedNoteDescription);
+                                                    deletedNoteDescription[
+                                                        index]);
                                               }
-                                              deletedNoteHeading = "";
-                                              deletedNoteDescription = "";
-                                            });
-                                            var firebaseUser = FirebaseAuth
-                                                .instance.currentUser;
-                                            firestoreInstance
-                                                .collection("Users")
-                                                .doc(firebaseUser.uid)
-                                                .update({
-                                              "noteHeading":
-                                                  FieldValue.arrayRemove(
-                                                      [index]),
-                                              "noteDescription":
-                                                  FieldValue.arrayRemove(
-                                                      [index]),
-                                            }).then((_) {
-                                              print("success!");
                                             });
                                           },
                                           child: new Text(
@@ -376,18 +391,51 @@ class _NotesWidgetState extends State<NotesWidget> {
                                       .add(noteDescriptionController.text);
                                   noteHeadingController.clear();
                                   noteDescriptionController.clear();
+
+                                  FutureBuilder<DocumentSnapshot>(
+                                      future: usersRef.doc(uid).get(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<DocumentSnapshot>
+                                              snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text("");
+                                        }
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          Map<String, dynamic> data =
+                                              snapshot.data.data();
+                                          print("inside futurebuilder");
+                                          List<String> tempNote =
+                                              List.from(noteHeading);
+                                          List<String> tempDesc =
+                                              List.from(noteDescription);
+                                          int count = 0;
+                                          int noteLength =
+                                              data['noteHeading'].length();
+                                          for (int i = noteLength; i > 0; i--) {
+                                            noteHeading.removeAt(count);
+                                            noteHeading[count + 1] =
+                                                tempNote[count];
+                                            noteDescription.removeAt(count);
+                                            noteDescription[count + 1] =
+                                                tempDesc[count];
+                                            count++;
+                                          }
+                                        }
+                                        return Text("");
+                                      });
+                                  var firebaseUser =
+                                      FirebaseAuth.instance.currentUser;
+                                  firestoreInstance
+                                      .collection("Users")
+                                      .doc(firebaseUser.uid)
+                                      .set({
+                                    "noteHeading": noteHeading,
+                                    "noteDescription": noteDescription,
+                                  }, SetOptions(merge: true)).then((_) {
+                                    print("success!");
+                                  });
                                   Navigator.pop(context);
-                                });
-                                var firebaseUser =
-                                    FirebaseAuth.instance.currentUser;
-                                firestoreInstance
-                                    .collection("Users")
-                                    .doc(firebaseUser.uid)
-                                    .set({
-                                  "noteHeading": noteHeading,
-                                  "noteDescription": noteDescription,
-                                }, SetOptions(merge: true)).then((_) {
-                                  print("success!");
                                 });
                               }
                             },

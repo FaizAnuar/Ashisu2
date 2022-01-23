@@ -1,3 +1,4 @@
+import 'package:Ashisu/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/background.dart';
 import 'package:provider/provider.dart';
@@ -16,31 +17,28 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeChanger>(
-      create: (_) => ThemeChanger(ThemeData.light()),
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Ashisu',
-          routes: {
-            '/mypage': (context) => MyPage(),
-          },
-          initialRoute: '/mypage'),
-    );
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Ashisu',
+        routes: {
+          '/mypage': (context) => MyPage(),
+        },
+        initialRoute: '/mypage');
   }
 }
 
-class StreamStart extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamProvider<UserId>.value(
-      value: AuthService().user,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Wrapper(),
-      ),
-    );
-  }
-}
+// class StreamStart extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamProvider<UserId>.value(
+//       value: AuthService().user,
+//       child: MaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         home: Wrapper(),
+//       ),
+//     );
+//   }
+// }
 
 class MyPage extends StatelessWidget {
   @override
@@ -110,7 +108,7 @@ class MyPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       //MaterialPageRoute(builder: (context) => SelectPage()),
-                      MaterialPageRoute(builder: (context) => StreamStart()),
+                      MaterialPageRoute(builder: (context) => SignIn()),
                     );
                   },
                   color: Colors.transparent,

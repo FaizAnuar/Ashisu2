@@ -9,10 +9,8 @@ FocusNode textSecondFocusNode = new FocusNode();
 int notesHeaderMaxLenth = 25;
 int notesDescriptionMaxLines = 10;
 int notesDescriptionMaxLenth;
-String deletedNoteHeading = "";
-String deletedNoteDescription = "";
-
-
+List<String> deletedNoteHeading = [];
+List<String> deletedNoteDescription = [];
 
 List<Color> noteColor = [
   Colors.pink[50],

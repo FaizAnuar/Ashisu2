@@ -42,15 +42,4 @@ class AuthService {
       return null;
     }
   }
-
-  //sign out
-  Future signOut() async {
-    try {
-      _userFromFirebaseUser(null);
-      return await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
 }

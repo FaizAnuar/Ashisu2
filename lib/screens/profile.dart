@@ -11,18 +11,17 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid = '';
   @override
   void initState() {
-    final User user = auth.currentUser;
+    User user = _auth.currentUser;
     uid = user.uid;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final AuthService _auth = AuthService();
     return Scaffold(
         backgroundColor: Colors.deepPurple[50],
         appBar: AppBar(

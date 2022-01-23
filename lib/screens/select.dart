@@ -1,3 +1,5 @@
+import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/screens/notes_widget.dart';
 import 'package:Ashisu/screens/sign_in.dart';
 import 'package:Ashisu/screens/timetable.dart';
@@ -19,15 +21,14 @@ class SelectPage extends StatefulWidget {
 
 class _SelectPageState extends State<SelectPage> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid = '';
 
   @override
   Widget build(BuildContext context) {
-    final User user = auth.currentUser;
-    final AuthService _auth = AuthService();
-
+    User user = _auth.currentUser;
     uid = user.uid;
+    print("this is user uid" + uid);
     return Scaffold(
       backgroundColor: Color(0xFFE0DFF9),
       appBar: AppBar(
@@ -41,7 +42,11 @@ class _SelectPageState extends State<SelectPage> {
               style: TextStyle(color: Color(0xFF5C0B68)),
             ),
             onPressed: () async {
-              await auth.signOut();
+              await _auth.signOut();
+              noteDescription.clear();
+              noteHeading.clear();
+              taskHeading.clear();
+              taskDescription.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => SignIn()),

@@ -1,9 +1,15 @@
+import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/models/user.dart';
+import 'package:Ashisu/screens/select.dart';
+import 'package:Ashisu/screens/sign_in.dart';
 import 'package:Ashisu/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Ashisu/services/auth.dart';
 import 'package:Ashisu/shared/loading.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -15,10 +21,10 @@ class Register extends StatefulWidget {
 enum SingingCharacter { lafayette, jefferson }
 
 class _RegisterState extends State<Register> {
-  final AuthService _auth = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
-  int _groupValue = 0;
+  String uid;
 
   //text field state
   String userName = '';
@@ -107,15 +113,48 @@ class _RegisterState extends State<Register> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              setState(() => loading = true);
-                              dynamic result =
-                                  await _auth.registerWithEmailAndPassword(
-                                      email, password, userName);
-                              if (result == null) {
+                              try {
                                 setState(() {
-                                  error = 'Email is not valid';
+                                  loading = true;
+                                });
+                                final newUser =
+                                    await _auth.createUserWithEmailAndPassword(
+                                  email: email,
+                                  password: password,
+                                );
+                                User user = _auth.currentUser;
+                                uid = user.uid;
+                                if (newUser != null) {
+                                  //send firebase
+                                  await FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(uid)
+                                      .set({
+                                    'email': email,
+                                    'displayName': userName,
+                                    'noteHeading': noteHeading,
+                                    'noteDescription': noteDescription,
+                                    'taskHeading': taskHeading,
+                                    'taskDescription': taskDescription,
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        "Successfully Register!",
+                                      ),
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SignIn()));
+                                }
+                                setState(() {
                                   loading = false;
                                 });
+                              } catch (e) {
+                                print(e.message);
                               }
                             }
                           },
@@ -135,7 +174,7 @@ class _RegisterState extends State<Register> {
     return InkWell(
       onTap: () {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Register()));
+            context, MaterialPageRoute(builder: (context) => SignIn()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
