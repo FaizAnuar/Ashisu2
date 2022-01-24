@@ -12,28 +12,25 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'NewTask.dart';
 
-class TimetablePage extends StatelessWidget {
+class TimetablePage extends StatefulWidget {
+  @override
+  _TimetablePageState createState() => _TimetablePageState();
+}
+
+class _TimetablePageState extends State<TimetablePage> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String uid = '';
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'avenir'),
-      home: timetablePage(),
-    );
-  }
-}
+  List<String> taskHeadingUrgent = [];
+  List<String> taskDescUrgent = [];
+  List<String> taskHeadingNotUrgent = [];
+  List<String> taskDescNotUrgent = [];
+  List<String> timeUrgent = [];
+  List<String> timeNotUrgent = [];
+  // List<String> selectionUrgent = [];
+  // List<String> selectionNotUrgent = [];
 
-class timetablePage extends StatefulWidget {
-  timetablePage({Key key, String taskDescription, String taskHeading})
-      : super(key: key);
-
-  @override
-  _timetablePageState createState() => _timetablePageState();
-}
-
-class _timetablePageState extends State<timetablePage> {
   String filterType = "today";
   DateTime today = new DateTime.now();
   String taskPop = "close";
@@ -52,6 +49,47 @@ class _timetablePageState extends State<timetablePage> {
     "DEC"
   ];
   CalendarController ctrlr = new CalendarController();
+
+  @override
+  void initState() {
+    super.initState();
+    User user = _auth.currentUser;
+    uid = user.uid;
+    getTaskArr(uid);
+    print("list init");
+    print(taskHeadingUrgent);
+  }
+
+  void getTaskArr(String uid) async {
+    await usersRef.doc(uid).get().then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      setState(() {
+        if (fields['taskHeading'] != null) {
+          int index = 0;
+          for (int i = fields['taskHeading'].length; i > 0; i--) {
+            if (fields['urgency'][index] == '0') {
+              taskHeadingUrgent.add(fields['taskHeading'][index]);
+              taskDescUrgent.add(fields['taskDescription'][index]);
+              timeUrgent.add(fields['selectedTime'][index]);
+              // selectionUrgent.add(fields['urgency'][index]);
+            } else {
+              taskHeadingNotUrgent.add(fields['taskHeading'][index]);
+              taskDescNotUrgent.add(fields['taskDescription'][index]);
+              timeNotUrgent.add(fields['selectedTime'][index]);
+              // selectionUrgent.add(fields['urgency'][index]);
+            }
+
+            index++;
+          }
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -105,6 +143,7 @@ class _timetablePageState extends State<timetablePage> {
             titleSpacing: 20,
           ),
           body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               buildPage('m'),
               buildPage('t'),
@@ -126,61 +165,39 @@ class _timetablePageState extends State<timetablePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            "Urgent",
+                            style: TextStyle(fontSize: 18, color: Colors.red),
                           ),
-                          Container(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Urgent",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.red),
-                                )
-                              ],
-                            ),
-                          ),
-                          buildTask(),
-                        ],
-                      ),
+                        ),
+                        buildTaskUrgent(),
+                      ],
                     ),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            "Not Urgent",
+                            style: TextStyle(fontSize: 18, color: Colors.green),
                           ),
-                          Container(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Not Urgent",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.green),
-                                )
-                              ],
-                            ),
-                          ),
-                          taskWidget(Color(0xfff96060), "Meeting with someone",
-                              "9:00 AM"),
-                          taskWidget(
-                              Colors.blue, "Meeting with someone", "9:00 AM"),
-                          taskWidget(
-                              Colors.green, "Take your medicines", "9:00 AM"),
-                          buildTask(),
-                        ],
-                      ),
+                        ),
+                        buildTaskNotUrgent(),
+                      ],
                     ),
                   ),
                   Container(
@@ -190,7 +207,7 @@ class _timetablePageState extends State<timetablePage> {
                         Positioned(
                           bottom: 0,
                           child: Container(
-                            height: 90,
+                            height: 65,
                             width: MediaQuery.of(context).size.width,
                             color: Color(0xff292e4e),
                             padding: EdgeInsets.all(20),
@@ -259,396 +276,371 @@ class _timetablePageState extends State<timetablePage> {
     setState(() {});
   }
 
-  Widget buildTask() {
-    int lengthTask;
+  Widget buildTaskUrgent() {
     final usersRef = FirebaseFirestore.instance.collection('Users');
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 10,
-        left: 10,
-        right: 10,
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 5,
+            left: 5,
+            right: 5,
+          ),
+          child: FutureBuilder<DocumentSnapshot>(
+            future: usersRef.doc(uid).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (taskHeadingUrgent.length != null) {
+                  int lengthTask = taskHeadingUrgent.length;
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: lengthTask,
+                    itemBuilder: (context, int index) {
+                      return new Padding(
+                        padding: const EdgeInsets.only(bottom: 5.5),
+                        child: new Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.horizontal,
+                          child: taskWidget(index, 0),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+              if (snapshot.hasError) {
+                return Text("Something went wrong");
+              }
+              return Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: SpinKitChasingDots(
+                    color: Color(0xffFFD119),
+                    size: 50,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
-      child: FutureBuilder<DocumentSnapshot>(
-        future: usersRef.doc(uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
+    );
+  }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map<String, dynamic> data = snapshot.data.data();
-            lengthTask = data['taskDescription'].length;
+  Widget buildTaskNotUrgent() {
+    final usersRef = FirebaseFirestore.instance.collection('Users');
 
-            if (data['taskDescription'].length > 0) {
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: lengthTask,
-                itemBuilder: (context, int index) {
-                  return new Padding(
-                    padding: const EdgeInsets.only(bottom: 5.5),
-                    child: new Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.horizontal,
-                      onDismissed: (direction) {
-                        setState(() {
-                          deletedTaskHeading = taskHeading[index];
-                          deletedTaskDescription = taskDescription[index];
-                          taskHeading.removeAt(index);
-                          taskDescription.removeAt(index);
-                          var firebaseUser = FirebaseAuth.instance.currentUser;
-                          firestoreInstance
-                              .collection("Users")
-                              .doc(firebaseUser.uid)
-                              .update({
-                            "taskHeading": taskHeading,
-                            "taskDescription": taskDescription,
-                            "selectedTime": selection,
-                          }).then((_) {
-                            print("success!");
-                          });
-                          Scaffold.of(context).showSnackBar(
-                            new SnackBar(
-                              backgroundColor: Colors.purple,
-                              content: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  new Text(
-                                    "Note Deleted",
-                                    style: TextStyle(),
-                                  ),
-                                  deletedTaskHeading != ""
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            print("undo");
-                                            print(deletedTaskHeading[index]);
-                                            setState(() {
-                                              var firebaseUser = FirebaseAuth
-                                                  .instance.currentUser;
-                                              firestoreInstance
-                                                  .collection("Users")
-                                                  .doc(firebaseUser.uid)
-                                                  .set({
-                                                "taskHeading":
-                                                    deletedTaskHeading,
-                                                "taskDescription":
-                                                    deletedTaskDescription,
-                                                "selectedTime": deletedTaskTime,
-                                              }, SetOptions(merge: true)).then(
-                                                      (_) {
-                                                print("success!");
-                                              });
-                                              if (deletedTaskHeading != null) {
-                                                taskHeading.add(
-                                                    deletedTaskHeading[index]);
-                                                taskDescription.add(
-                                                    deletedTaskDescription[
-                                                        index]);
-                                                taskTime.add(
-                                                    deletedTaskTime[index]);
-                                              }
-                                            });
-                                          },
-                                          child: new Text(
-                                            "Undo",
-                                            style: TextStyle(),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                ],
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 5,
+            left: 5,
+            right: 5,
+          ),
+          child: FutureBuilder<DocumentSnapshot>(
+            future: usersRef.doc(uid).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (taskHeadingNotUrgent.length != null) {
+                  int lengthTask = taskHeadingNotUrgent.length;
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: lengthTask,
+                    itemBuilder: (context, int index) {
+                      return new Padding(
+                        padding: const EdgeInsets.only(bottom: 5.5),
+                        child: new Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.horizontal,
+                          child: taskWidget(index, 1),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+              if (snapshot.hasError) {
+                return Text("Something went wrong");
+              }
+              return Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: SpinKitChasingDots(
+                    color: Color(0xffFFD119),
+                    size: 50,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget taskWidget(int index, int urgency) {
+    final usersRef = FirebaseFirestore.instance.collection('Users');
+
+    return Slidable(
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.3,
+      child: Container(
+        height: 100,
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                offset: Offset(0, 9),
+                blurRadius: 20,
+                spreadRadius: 1)
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              height: 25,
+              width: 25,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: taskMarginColor[
+                          (index % taskMarginColor.length).floor()],
+                      width: 4)),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: FutureBuilder<DocumentSnapshot>(
+                      future: usersRef.doc(uid).get(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text("Something went wrong");
+                        }
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (urgency == 0) {
+                            return Text(
+                              taskHeadingUrgent[index],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 20.00,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              taskHeadingNotUrgent[index],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 20.00,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          }
+                        }
+                        return Container(
+                          color: Colors.transparent,
+                          child: Center(
+                            child: SpinKitChasingDots(
+                              color: Color(0xffFFD119),
+                              size: 50,
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Flexible(
+                  child: Container(
+                    height: double.infinity,
+                    child: FutureBuilder<DocumentSnapshot>(
+                        future: usersRef.doc(uid).get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (urgency == 0) {
+                              return AutoSizeText(
+                                taskDescUrgent[index],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.00,
+                                  color: Colors.black,
+                                ),
+                              );
+                            } else {
+                              return AutoSizeText(
+                                taskDescNotUrgent[index],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.00,
+                                  color: Colors.black,
+                                ),
+                              );
+                            }
+                          }
+                          return Container(
+                            color: Colors.transparent,
+                            child: Center(
+                              child: SpinKitChasingDots(
+                                color: Color(0xffFFD119),
+                                size: 50,
                               ),
                             ),
                           );
-                        });
-                      },
-                      background: ClipRRect(
-                        borderRadius: BorderRadius.circular(5.5),
-                        child: Container(
-                          color: Colors.green,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Delete",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      secondaryBackground: ClipRRect(
-                        borderRadius: BorderRadius.circular(5.5),
-                        child: Container(
-                          color: Colors.red,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Delete",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      child: TaskList(index),
-                    ),
-                  );
-                },
-              );
-            }
-          }
-          return Container(
-            color: Colors.transparent,
-            child: Center(
-              child: SpinKitChasingDots(
-                color: Color(0xffFFD119),
-                size: 50,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget TaskList(int index) {
-    final usersRef = FirebaseFirestore.instance.collection('Users');
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5.5),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: taskColor[(index % taskColor.length).floor()],
-          borderRadius: BorderRadius.circular(5.5),
-        ),
-        height: 100,
-        child: Center(
-          child: Row(
-            children: [
-              new Container(
-                color:
-                    taskMarginColor[(index % taskMarginColor.length).floor()],
-                width: 3.5,
-                height: double.infinity,
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Flexible(
-                        child: FutureBuilder<DocumentSnapshot>(
-                            future: usersRef.doc(uid).get(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.hasError) {
-                                return Text("Something went wrong");
-                              }
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                Map<String, dynamic> data =
-                                    snapshot.data.data();
-                                return Text(
-                                  data['taskHeading'][index].toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 20.00,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                );
-                              }
-                              return Container(
-                                color: Colors.transparent,
-                                child: Center(
-                                  child: SpinKitChasingDots(
-                                    color: Color(0xffFFD119),
-                                    size: 50,
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                      SizedBox(
-                        height: 2.5,
-                      ),
-                      Flexible(
-                        child: Container(
-                          height: double.infinity,
-                          child: FutureBuilder<DocumentSnapshot>(
-                              future: usersRef.doc(uid).get(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text("Something went wrong");
-                                }
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  Map<String, dynamic> data =
-                                      snapshot.data.data();
-                                  return AutoSizeText(
-                                    data['taskDescription'][index].toString(),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 15.00,
-                                      color: Colors.black,
-                                    ),
-                                  );
-                                }
-                                return Container(
-                                  color: Colors.transparent,
-                                  child: Center(
-                                    child: SpinKitChasingDots(
-                                      color: Color(0xffFFD119),
-                                      size: 50,
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                      Flexible(
-                        child: Container(
-                          height: double.infinity,
-                          child: FutureBuilder<DocumentSnapshot>(
-                              future: usersRef.doc(uid).get(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text("Something went wrong");
-                                }
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  Map<String, dynamic> data =
-                                      snapshot.data.data();
-                                  return AutoSizeText(
-                                    data['selectedTime'][index].toString(),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 15.00,
-                                      color: Colors.black,
-                                    ),
-                                  );
-                                }
-                                return Container(
-                                  color: Colors.transparent,
-                                  child: Center(
-                                    child: SpinKitChasingDots(
-                                      color: Color(0xffFFD119),
-                                      size: 50,
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                    ],
+                        }),
                   ),
                 ),
-              ),
-            ],
-          ),
+                SizedBox(
+                  height: 2,
+                ),
+                Flexible(
+                  child: Container(
+                    height: double.infinity,
+                    child: FutureBuilder<DocumentSnapshot>(
+                        future: usersRef.doc(uid).get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (urgency == 0) {
+                              return AutoSizeText(
+                                'Time :' + timeUrgent[index],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.00,
+                                  color: Colors.black,
+                                ),
+                              );
+                            } else {
+                              return AutoSizeText(
+                                'Time :' + timeNotUrgent[index],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.00,
+                                  color: Colors.black,
+                                ),
+                              );
+                            }
+                          }
+                          return Container(
+                            color: Colors.transparent,
+                            child: Center(
+                              child: SpinKitChasingDots(
+                                color: Color(0xffFFD119),
+                                size: 50,
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Container(
+              height: 50,
+              width: 5,
+              color: taskColor[(index % taskColor.length).floor()],
+            )
+          ],
         ),
       ),
+      secondaryActions: [
+        IconSlideAction(
+          caption: "Edit",
+          color: Colors.white,
+          icon: Icons.edit,
+          onTap: () {},
+        ),
+        IconSlideAction(
+          caption: "Delete",
+          color: taskColor[(index % taskColor.length).floor()],
+          icon: Icons.edit,
+          onTap: () {
+            setState(() {
+              if (urgency == 0) {
+                int indexWhere1 = taskHeading.indexWhere(
+                    (element) => element == taskHeadingUrgent[index]);
+                int indexWhere2 = taskDescription
+                    .indexWhere((element) => element == taskDescUrgent[index]);
+                int indexWhere3 = taskTime
+                    .indexWhere((element) => element == timeUrgent[index]);
+
+                if (indexWhere1 == indexWhere2 && indexWhere2 == indexWhere3) {
+                  taskHeading.removeAt(indexWhere1);
+                  taskDescription.removeAt(indexWhere1);
+                  taskTime.removeAt(indexWhere1);
+                  selection.removeAt(indexWhere1);
+                }
+
+                taskHeadingUrgent.removeAt(index);
+                taskDescUrgent.removeAt(index);
+                timeUrgent.removeAt(index);
+              } else {
+                int indexWhere1 = taskHeading.indexWhere(
+                    (element) => element == taskHeadingNotUrgent[index]);
+                int indexWhere2 = taskDescription.indexWhere(
+                    (element) => element == taskDescNotUrgent[index]);
+                int indexWhere3 = taskTime
+                    .indexWhere((element) => element == timeNotUrgent[index]);
+
+                if (indexWhere1 == indexWhere2 && indexWhere2 == indexWhere3) {
+                  taskHeading.removeAt(indexWhere1);
+                  taskDescription.removeAt(indexWhere1);
+                  taskTime.removeAt(indexWhere1);
+                  selection.removeAt(indexWhere1);
+                }
+
+                taskHeadingNotUrgent.removeAt(index);
+                taskDescNotUrgent.removeAt(index);
+                timeNotUrgent.removeAt(index);
+              }
+
+              var firebaseUser = FirebaseAuth.instance.currentUser;
+              firestoreInstance
+                  .collection("Users")
+                  .doc(firebaseUser.uid)
+                  .update({
+                "taskHeading": taskHeading,
+                "taskDescription": taskDescription,
+                "selectedTime": taskTime,
+                "urgency": selection,
+              }).then((_) {
+                print("success!");
+              });
+            });
+          },
+        )
+      ],
     );
   }
-}
-
-Slidable taskWidget(Color color, String title, String time) {
-  return Slidable(
-    actionPane: SlidableDrawerActionPane(),
-    actionExtentRatio: 0.3,
-    child: Container(
-      height: 80,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              offset: Offset(0, 9),
-              blurRadius: 20,
-              spreadRadius: 1)
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            height: 25,
-            width: 25,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: color, width: 4)),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              Text(
-                time,
-                style: TextStyle(color: Colors.grey, fontSize: 18),
-              )
-            ],
-          ),
-          Expanded(
-            child: Container(),
-          ),
-          Container(
-            height: 50,
-            width: 5,
-            color: color,
-          )
-        ],
-      ),
-    ),
-    secondaryActions: [
-      IconSlideAction(
-        caption: "Edit",
-        color: Colors.white,
-        icon: Icons.edit,
-        onTap: () {},
-      ),
-      IconSlideAction(
-        caption: "Delete",
-        color: color,
-        icon: Icons.edit,
-        onTap: () {},
-      )
-    ],
-  );
 }

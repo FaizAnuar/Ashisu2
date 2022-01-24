@@ -29,26 +29,8 @@ class _SelectPageState extends State<SelectPage> {
     super.initState();
     User user = _auth.currentUser;
     uid = user.uid;
-    getNotesArr();
     notesDescriptionMaxLenth =
         notesDescriptionMaxLines * notesDescriptionMaxLines;
-  }
-
-  void getNotesArr() async {
-    await usersRef.doc(uid).get().then((value) {
-      //'value' is the instance of 'DocumentSnapshot'
-      //'value.data()' contains all the data inside a document in the form of 'dictionary'
-      var fields = value.data();
-
-      //Using 'setState' to update the user's data inside the app
-      //firstName, lastName and title are 'initialised variables'
-      int index = 0;
-      for (int i = fields['noteHeading'].length; i > 0; i--) {
-        noteHeading.add(fields['noteHeading'][index]);
-        noteDescription.add(fields['noteDescription'][index]);
-        index++;
-      }
-    });
   }
 
   @override
@@ -74,10 +56,9 @@ class _SelectPageState extends State<SelectPage> {
               noteHeading.clear();
               taskHeading.clear();
               taskDescription.clear();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => SignIn()),
-              );
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SignIn()),
+                  (Route<dynamic> route) => false);
             },
           ),
         ],

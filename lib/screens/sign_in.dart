@@ -1,3 +1,5 @@
+import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/screens/register.dart';
 import 'package:Ashisu/screens/select.dart';
 import 'package:Ashisu/services/auth.dart';
@@ -132,6 +134,10 @@ class _SignInState extends State<SignIn> {
                                       .snapshots()
                                       .listen((data) {
                                     setState(() {
+                                      //insert data
+                                      User user = _auth.currentUser;
+                                      String uid = user.uid;
+                                      getNotesArr(uid);
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
@@ -174,6 +180,30 @@ class _SignInState extends State<SignIn> {
                     CustomPaint(painter: CurvePainter()),
                   ],
                 )));
+  }
+
+  void getNotesArr(String uid) async {
+    await usersRef.doc(uid).get().then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+      print(fields['noteHeading'].length);
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      int index = 0;
+      for (int i = fields['noteHeading'].length; i > 0; i--) {
+        noteHeading.add(fields['noteHeading'][index]);
+        noteDescription.add(fields['noteDescription'][index]);
+        taskHeading.add(fields['taskHeading'][index]);
+        taskDescription.add(fields['taskDescription'][index]);
+        taskTime.add(fields['selectedTime'][index]);
+        selection.add(fields['urgency'][index]);
+
+        index++;
+      }
+      print(noteHeading);
+    });
   }
 
   Widget _createAccountLabel() {

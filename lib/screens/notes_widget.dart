@@ -416,18 +416,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                                   // tempNote = List.from(noteHeading);
                                   // tempDesc = List.from(noteDescription);
                                 });
-
-                                // int count = 0;
-                                // for (int i = firebaseArrLength; i > 0; i--) {
-                                //   tempNote.removeAt(count);
-                                //   tempNote[count + 1] = noteHeading[count];
-
-                                //   tempDesc.removeAt(count);
-                                //   tempDesc[count + 1] = tempDesc[count];
-
-                                //   count++;
-                                // }
-
+                                print(noteHeading);
                                 var firebaseUser =
                                     FirebaseAuth.instance.currentUser;
                                 firestoreInstance
