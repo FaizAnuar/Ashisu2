@@ -98,74 +98,82 @@ class _NotesWidgetState extends State<NotesWidget> {
                       key: UniqueKey(),
                       direction: DismissDirection.horizontal,
                       onDismissed: (direction) {
-                        setState(() {
-                          deletedNoteHeading = List.from(noteHeading);
-                          deletedNoteDescription = List.from(noteDescription);
-                          noteHeading.removeAt(index);
-                          noteDescription.removeAt(index);
+                        setState(
+                          () {
+                            deletedNoteHeading = List.from(noteHeading);
+                            deletedNoteDescription = List.from(noteDescription);
+                            noteHeading.removeAt(index);
+                            noteDescription.removeAt(index);
 
-                          var firebaseUser = FirebaseAuth.instance.currentUser;
-                          firestoreInstance
-                              .collection("Users")
-                              .doc(firebaseUser.uid)
-                              .update({
-                            "noteHeading": noteHeading,
-                            "noteDescription": noteDescription,
-                          }).then((_) {
-                            print("success!");
-                          });
+                            var firebaseUser =
+                                FirebaseAuth.instance.currentUser;
+                            firestoreInstance
+                                .collection("Users")
+                                .doc(firebaseUser.uid)
+                                .update({
+                              "noteHeading": noteHeading,
+                              "noteDescription": noteDescription,
+                            }).then((_) {
+                              print("success!");
+                            });
 
-                          Scaffold.of(context).showSnackBar(
-                            new SnackBar(
-                              backgroundColor: Colors.purple,
-                              content: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  new Text(
-                                    "Note Deleted",
-                                    style: TextStyle(),
-                                  ),
-                                  deletedNoteHeading != null
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            print("undo");
-                                            print(deletedNoteHeading[index]);
-                                            setState(() {
-                                              var firebaseUser = FirebaseAuth
-                                                  .instance.currentUser;
-                                              firestoreInstance
-                                                  .collection("Users")
-                                                  .doc(firebaseUser.uid)
-                                                  .set({
-                                                "noteHeading":
-                                                    deletedNoteHeading,
-                                                "noteDescription":
-                                                    deletedNoteDescription,
-                                              }, SetOptions(merge: true)).then(
-                                                      (_) {
-                                                print("success!");
+                            Scaffold.of(context).showSnackBar(
+                              new SnackBar(
+                                backgroundColor: Colors.purple,
+                                content: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    new Text(
+                                      "Note Deleted",
+                                      style: TextStyle(),
+                                    ),
+                                    deletedNoteHeading != null
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              print("undo");
+                                              print(deletedNoteHeading[index]);
+                                              setState(() {
+                                                var firebaseUser = FirebaseAuth
+                                                    .instance.currentUser;
+                                                firestoreInstance
+                                                    .collection("Users")
+                                                    .doc(firebaseUser.uid)
+                                                    .set(
+                                                        {
+                                                      "noteHeading":
+                                                          deletedNoteHeading,
+                                                      "noteDescription":
+                                                          deletedNoteDescription,
+                                                    },
+                                                        SetOptions(
+                                                            merge: true)).then(
+                                                        (_) {
+                                                  print("success!");
+                                                });
+                                                if (deletedNoteHeading !=
+                                                    null) {
+                                                  noteHeading.add(
+                                                      deletedNoteHeading[
+                                                          index]);
+                                                  noteDescription.add(
+                                                      deletedNoteDescription[
+                                                          index]);
+                                                }
                                               });
-                                              if (deletedNoteHeading != null) {
-                                                noteHeading.add(
-                                                    deletedNoteHeading[index]);
-                                                noteDescription.add(
-                                                    deletedNoteDescription[
-                                                        index]);
-                                              }
-                                            });
-                                          },
-                                          child: new Text(
-                                            "Undo",
-                                            style: TextStyle(),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                ],
+                                            },
+                                            child: new Text(
+                                              "Undo",
+                                              style: TextStyle(),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        });
+                            );
+                          },
+                        );
                       },
                       background: ClipRRect(
                         borderRadius: BorderRadius.circular(5.5),

@@ -343,7 +343,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 color: Color(0xffff96060)),
             child: Center(
               child: Text(
-                "Add Task",
+                "Add Reminder",
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
