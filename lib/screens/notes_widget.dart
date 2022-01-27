@@ -247,7 +247,7 @@ class _NotesWidgetState extends State<NotesWidget> {
           color: noteColor[(index % noteColor.length).floor()],
           borderRadius: BorderRadius.circular(5.5),
         ),
-        height: 100,
+        height: 150,
         child: Center(
           child: Row(
             children: [
@@ -316,10 +316,10 @@ class _NotesWidgetState extends State<NotesWidget> {
                                       snapshot.data.data();
                                   return AutoSizeText(
                                     data['noteDescription'][index].toString(),
-                                    maxLines: 2,
+                                    maxLines: 10,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 15.00,
+                                      fontSize: 18.00,
                                       color: Colors.black,
                                     ),
                                   );

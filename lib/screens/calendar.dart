@@ -44,11 +44,47 @@ class CalendarWidget extends StatelessWidget {
           );
         },
       ),
-      body: Container(
-        child: SfCalendar(
-          view: CalendarView.week,
-          cellBorderColor: Colors.grey[400],
-        ),
+      body: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      child: SfCalendar(
+                        view: CalendarView.month,
+                        cellBorderColor: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "Reminder",
+                        style: TextStyle(fontSize: 18, color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
