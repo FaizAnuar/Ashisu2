@@ -83,7 +83,14 @@ class _TimetablePageState extends State<TimetablePage> {
         length: 7,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Task For Today"),
+            title: Text(
+              "Task For Today",
+              style: TextStyle(
+                  fontFamily: 'avenir',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  fontSize: 24),
+            ),
             //centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),

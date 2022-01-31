@@ -1,9 +1,12 @@
 import 'package:Ashisu/api/notification_api.dart';
 import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/event.dart';
 import 'package:Ashisu/models/timetablePage.dart';
+import 'package:Ashisu/screens/alarm_page.dart';
 import 'package:Ashisu/screens/notes_widget.dart';
 import 'package:Ashisu/screens/sign_in.dart';
 import 'package:Ashisu/screens/timetable.dart';
+import 'package:Ashisu/services/alarm_helper.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,6 +74,9 @@ class _SelectPageState extends State<SelectPage> {
               noteHeading.clear();
               taskHeading.clear();
               taskDescription.clear();
+              reminderDate.clear();
+              reminderHeading.clear();
+              reminderTime.clear();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => SignIn()),
                   (Route<dynamic> route) => false);
@@ -141,7 +147,7 @@ class _SelectPageState extends State<SelectPage> {
             ),
             Container(),
             SizedBox(
-              height: 35,
+              height: 50,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -162,13 +168,13 @@ class _SelectPageState extends State<SelectPage> {
                           color: Colors.pink[100],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        height: 100,
-                        width: 100,
+                        height: 90,
+                        width: 90,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.schedule,
+                              Icons.apps_rounded,
                               size: 45,
                               color: Colors.pink[700],
                             ),
@@ -204,8 +210,8 @@ class _SelectPageState extends State<SelectPage> {
                           color: Colors.green[100],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        height: 100,
-                        width: 100,
+                        height: 90,
+                        width: 90,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -237,6 +243,47 @@ class _SelectPageState extends State<SelectPage> {
                       onTap: () {
                         Navigator.push(
                           context,
+                          MaterialPageRoute(builder: (context) => AlarmPage()),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.yellow[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: 90,
+                        width: 90,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.alarm,
+                              size: 45,
+                              color: Colors.yellow[700],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Alarm",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.yellow[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
                           MaterialPageRoute(
                               builder: (context) => NotesWidget()),
                         );
@@ -246,8 +293,8 @@ class _SelectPageState extends State<SelectPage> {
                           color: Colors.blue[100],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        height: 100,
-                        width: 100,
+                        height: 90,
+                        width: 90,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -277,93 +324,6 @@ class _SelectPageState extends State<SelectPage> {
             ),
             SizedBox(
               height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () => NotificationApi.showNotification(
-                        title: 'Topek Arthur',
-                        body: 'rokok tang mat',
-                        payload: 'topek.abs',
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.pink[100],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        height: 100,
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.schedule,
-                              size: 45,
-                              color: Colors.pink[700],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Timetable",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.pink[700],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // Column(
-                //   children: <Widget>[
-                //     GestureDetector(
-                //       onTap: () => NotificationApi.showScheduleNotification(
-                //         title: 'Topek Arthur',
-                //         body: 'rokok tang mat',
-                //         payload: 'topek.abs',
-                //         scheduleDate: DateTime.now().add(Duration(seconds: 12)),
-                //       ),
-                //       child: Container(
-                //         decoration: BoxDecoration(
-                //           color: Colors.pink[100],
-                //           borderRadius: BorderRadius.circular(10),
-                //         ),
-                //         height: 100,
-                //         width: 100,
-                //         child: Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: <Widget>[
-                //             Icon(
-                //               Icons.schedule,
-                //               size: 45,
-                //               color: Colors.pink[700],
-                //             ),
-                //             SizedBox(
-                //               height: 5,
-                //             ),
-                //             Text(
-                //               "Timetable",
-                //               style: TextStyle(
-                //                 fontSize: 15,
-                //                 fontWeight: FontWeight.bold,
-                //                 color: Colors.pink[700],
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-              ],
             ),
           ],
         ),

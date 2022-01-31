@@ -9,7 +9,6 @@ import 'package:Ashisu/screens/event_editing_page.dart';
 import 'package:Ashisu/shared/constants.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -21,13 +20,28 @@ class CalendarWidget extends StatefulWidget {
 
 class _CalendarWidgetState extends State<CalendarWidget> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   int firebaseArrayLength;
+  @override
+  void initState() {
+    super.initState();
+    User user = _auth.currentUser;
+    uid = user.uid;
+    getFirebaseReminderLength();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calendar"),
+        title: Text(
+          "Calendar",
+          style: TextStyle(
+              fontFamily: 'avenir',
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontSize: 24),
+        ),
         //centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded),

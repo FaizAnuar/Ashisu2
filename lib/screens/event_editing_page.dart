@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:Ashisu/screens/calendar.dart';
 import 'package:Ashisu/services/database.dart';
 import 'package:Ashisu/shared/constants.dart';
@@ -36,6 +34,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   DateTime startTime;
   DateTime valu;
   final dateFormatter = DateFormat('dd MMMM yyyy');
+  final _timeFormat = DateFormat('HH:mm');
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(

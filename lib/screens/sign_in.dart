@@ -1,4 +1,5 @@
 import 'package:Ashisu/models/NotesPage.dart';
+import 'package:Ashisu/models/event.dart';
 import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/screens/register.dart';
 import 'package:Ashisu/screens/select.dart';
@@ -199,6 +200,9 @@ class _SignInState extends State<SignIn> {
         taskDescription.add(fields['taskDescription'][index]);
         taskTime.add(fields['selectedTime'][index]);
         selection.add(fields['urgency'][index]);
+        reminderDate.add(fields['reminderDate'][index]);
+        reminderHeading.add(fields['reminderHeading'][index]);
+        reminderTime.add(fields['selectedReminderTime'][index]);
 
         index++;
       }

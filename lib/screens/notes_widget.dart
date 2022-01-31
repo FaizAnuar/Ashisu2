@@ -44,7 +44,14 @@ class _NotesWidgetState extends State<NotesWidget> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Notes"),
+        title: Text(
+          "Notes",
+          style: TextStyle(
+              fontFamily: 'avenir',
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontSize: 24),
+        ),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -581,7 +588,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                   minHeight: (MediaQuery.of(context).size.height),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 250, top: 50),
+                  padding: EdgeInsets.only(bottom: 250, top: 100),
                   child: new Column(
                     children: <Widget>[
                       Row(
@@ -674,10 +681,10 @@ class _NotesWidgetState extends State<NotesWidget> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 15),
+                        padding: const EdgeInsets.only(top: 25),
                         child: Container(
                           margin: EdgeInsets.all(1),
-                          height: 5 * 24.0,
+                          height: 5 * 60.0,
                           child: TextFormField(
                             focusNode: textSecondFocusNode,
                             maxLines: notesDescriptionMaxLines,
@@ -744,7 +751,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                   minHeight: (MediaQuery.of(context).size.height),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 250, top: 50),
+                  padding: EdgeInsets.only(bottom: 250, top: 100),
                   child: new Column(
                     children: <Widget>[
                       Row(
@@ -842,10 +849,10 @@ class _NotesWidgetState extends State<NotesWidget> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 15),
+                        padding: const EdgeInsets.only(top: 25),
                         child: Container(
                           margin: EdgeInsets.all(1),
-                          height: 5 * 24.0,
+                          height: 5 * 60.0,
                           child: TextFormField(
                             focusNode: textSecondFocusNode,
                             maxLines: notesDescriptionMaxLines,
