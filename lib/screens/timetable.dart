@@ -34,21 +34,6 @@ class _TimetablePageState extends State<TimetablePage> {
   String filterType = "today";
   DateTime today = new DateTime.now();
   String taskPop = "close";
-  var monthNames = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEPT",
-    "OCT",
-    "NOV",
-    "DEC"
-  ];
-  CalendarController ctrlr = new CalendarController();
 
   @override
   void initState() {
@@ -68,26 +53,28 @@ class _TimetablePageState extends State<TimetablePage> {
 
       //Using 'setState' to update the user's data inside the app
       //firstName, lastName and title are 'initialised variables'
-      setState(() {
-        if (fields['taskHeading'] != null) {
-          int index = 0;
-          for (int i = fields['taskHeading'].length; i > 0; i--) {
-            if (fields['urgency'][index] == '0') {
-              taskHeadingUrgent.add(fields['taskHeading'][index]);
-              taskDescUrgent.add(fields['taskDescription'][index]);
-              timeUrgent.add(fields['selectedTime'][index]);
-              // selectionUrgent.add(fields['urgency'][index]);
-            } else {
-              taskHeadingNotUrgent.add(fields['taskHeading'][index]);
-              taskDescNotUrgent.add(fields['taskDescription'][index]);
-              timeNotUrgent.add(fields['selectedTime'][index]);
-              // selectionUrgent.add(fields['urgency'][index]);
-            }
+      setState(
+        () {
+          if (fields['taskHeading'] != null) {
+            int index = 0;
+            for (int i = fields['taskHeading'].length; i > 0; i--) {
+              if (fields['urgency'][index] == '0') {
+                taskHeadingUrgent.add(fields['taskHeading'][index]);
+                taskDescUrgent.add(fields['taskDescription'][index]);
+                timeUrgent.add(fields['selectedTime'][index]);
+                // selectionUrgent.add(fields['urgency'][index]);
+              } else {
+                taskHeadingNotUrgent.add(fields['taskHeading'][index]);
+                taskDescNotUrgent.add(fields['taskDescription'][index]);
+                timeNotUrgent.add(fields['selectedTime'][index]);
+                // selectionUrgent.add(fields['urgency'][index]);
+              }
 
-            index++;
+              index++;
+            }
           }
-        }
-      });
+        },
+      );
     });
   }
 
@@ -96,7 +83,7 @@ class _TimetablePageState extends State<TimetablePage> {
         length: 7,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Timetable"),
+            title: Text("Task For Today"),
             //centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_rounded),
@@ -125,35 +112,8 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               ),
             ),
-            bottom: TabBar(
-              isScrollable: true,
-              indicatorColor: Colors.white,
-              indicatorWeight: 5,
-              tabs: [
-                Tab(text: 'Mon'),
-                Tab(text: 'Tue'),
-                Tab(text: 'Wed'),
-                Tab(text: 'Thu'),
-                Tab(text: 'Fri'),
-                Tab(text: 'Sat'),
-                Tab(text: 'Sun'),
-              ],
-            ),
-            elevation: 20,
-            titleSpacing: 20,
           ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              buildPage('m'),
-              buildPage('t'),
-              buildPage('w'),
-              buildPage('t'),
-              buildPage('f'),
-              buildPage('s'),
-              buildPage('s'),
-            ],
-          ),
+          body: buildPage('m'),
         ),
       );
 
@@ -576,13 +536,7 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
       secondaryActions: [
         IconSlideAction(
-          caption: "Edit",
-          color: Colors.white,
-          icon: Icons.edit,
-          onTap: () {},
-        ),
-        IconSlideAction(
-          caption: "Delete",
+          caption: "Done",
           color: taskColor[(index % taskColor.length).floor()],
           icon: Icons.edit,
           onTap: () {

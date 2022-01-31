@@ -1,3 +1,4 @@
+import 'package:Ashisu/api/notification_api.dart';
 import 'package:Ashisu/models/NotesPage.dart';
 import 'package:Ashisu/models/timetablePage.dart';
 import 'package:Ashisu/screens/notes_widget.dart';
@@ -7,6 +8,7 @@ import 'package:Ashisu/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:Ashisu/screens/calendar.dart';
 import 'package:Ashisu/screens/profile.dart';
@@ -20,9 +22,12 @@ class SelectPage extends StatefulWidget {
 }
 
 class _SelectPageState extends State<SelectPage> {
+  FlutterLocalNotificationsPlugin localNotification;
   final usersRef = FirebaseFirestore.instance.collection('Users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid = '';
+
+  get child => null;
 
   @override
   void initState() {
@@ -31,7 +36,17 @@ class _SelectPageState extends State<SelectPage> {
     uid = user.uid;
     notesDescriptionMaxLenth =
         notesDescriptionMaxLines * notesDescriptionMaxLines;
+    NotificationApi.init();
+    listenNotifications();
   }
+
+  void listenNotifications() =>
+      NotificationApi.onNotifications.stream.listen(onClikedNotification);
+
+  void onClikedNotification(String payload) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Profile(),
+      )); // MaterialPageRoute
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +272,97 @@ class _SelectPageState extends State<SelectPage> {
                       ),
                     ),
                   ],
-                )
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => NotificationApi.showNotification(
+                        title: 'Topek Arthur',
+                        body: 'rokok tang mat',
+                        payload: 'topek.abs',
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.pink[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: 100,
+                        width: 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.schedule,
+                              size: 45,
+                              color: Colors.pink[700],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Timetable",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.pink[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Column(
+                //   children: <Widget>[
+                //     GestureDetector(
+                //       onTap: () => NotificationApi.showScheduleNotification(
+                //         title: 'Topek Arthur',
+                //         body: 'rokok tang mat',
+                //         payload: 'topek.abs',
+                //         scheduleDate: DateTime.now().add(Duration(seconds: 12)),
+                //       ),
+                //       child: Container(
+                //         decoration: BoxDecoration(
+                //           color: Colors.pink[100],
+                //           borderRadius: BorderRadius.circular(10),
+                //         ),
+                //         height: 100,
+                //         width: 100,
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: <Widget>[
+                //             Icon(
+                //               Icons.schedule,
+                //               size: 45,
+                //               color: Colors.pink[700],
+                //             ),
+                //             SizedBox(
+                //               height: 5,
+                //             ),
+                //             Text(
+                //               "Timetable",
+                //               style: TextStyle(
+                //                 fontSize: 15,
+                //                 fontWeight: FontWeight.bold,
+                //                 color: Colors.pink[700],
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ],

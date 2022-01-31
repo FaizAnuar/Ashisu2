@@ -1,6 +1,7 @@
 import 'package:Ashisu/screens/select.dart';
 import 'package:Ashisu/services/database.dart';
 import 'package:Ashisu/shared/constants.dart';
+import 'package:Ashisu/widgets/search_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,16 @@ class NotesWidget extends StatefulWidget {
 
 class _NotesWidgetState extends State<NotesWidget> {
   var _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String notes;
   final usersRef = FirebaseFirestore.instance.collection('Users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid;
   int firebaseArrLength;
+  String query = '';
+  Icon customIcon = const Icon(Icons.search);
+  Widget customSearchBar = const Text('My Notes');
 
   @override
   void initState() {
@@ -36,9 +42,47 @@ class _NotesWidgetState extends State<NotesWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Notes"),
-        //centerTitle: true,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                if (customIcon.icon == Icons.search) {
+                  customIcon = const Icon(Icons.cancel);
+                  customSearchBar = const ListTile(
+                    leading: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    title: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search Notes...',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                } else {
+                  customIcon = const Icon(Icons.search);
+                  customSearchBar = const Text('My  Notes');
+                }
+              });
+            },
+            icon: const Icon(Icons.search),
+          )
+        ],
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded),
           onPressed: () {
@@ -66,6 +110,28 @@ class _NotesWidgetState extends State<NotesWidget> {
         child: Icon(Icons.create),
       ),
     );
+  }
+
+  Widget buildSearch() => SearchWidget(
+        text: query,
+        hintText: 'Notes',
+        onChanged: searchNote,
+      );
+
+  void searchNote(String query) {
+    // final books = allBooks.where((book) {
+    //   final titleLower = book.title.toLowerCase();
+    //   final authorLower = book.author.toLowerCase();
+    //   final searchLower = query.toLowerCase();
+
+    //   return titleLower.contains(searchLower) ||
+    //       authorLower.contains(searchLower);
+    // }).toList();
+
+    // setState(() {
+    //   this.query = query;
+    //   this.books = books;
+    // });
   }
 
   Widget buildNotes() {
@@ -98,87 +164,100 @@ class _NotesWidgetState extends State<NotesWidget> {
                       key: UniqueKey(),
                       direction: DismissDirection.horizontal,
                       onDismissed: (direction) {
-                        setState(
-                          () {
-                            deletedNoteHeading = List.from(noteHeading);
-                            deletedNoteDescription = List.from(noteDescription);
-                            noteHeading.removeAt(index);
-                            noteDescription.removeAt(index);
+                        String action;
+                        if (direction == DismissDirection.startToEnd) {
+                          setState(
+                            () {
+                              deletedNoteHeading = List.from(noteHeading);
+                              deletedNoteDescription =
+                                  List.from(noteDescription);
+                              noteHeading.removeAt(index);
+                              noteDescription.removeAt(index);
 
-                            var firebaseUser =
-                                FirebaseAuth.instance.currentUser;
-                            firestoreInstance
-                                .collection("Users")
-                                .doc(firebaseUser.uid)
-                                .update({
-                              "noteHeading": noteHeading,
-                              "noteDescription": noteDescription,
-                            }).then((_) {
-                              print("success!");
-                            });
+                              var firebaseUser =
+                                  FirebaseAuth.instance.currentUser;
+                              firestoreInstance
+                                  .collection("Users")
+                                  .doc(firebaseUser.uid)
+                                  .update({
+                                "noteHeading": noteHeading,
+                                "noteDescription": noteDescription,
+                              }).then((_) {
+                                print("success!");
+                              });
 
-                            Scaffold.of(context).showSnackBar(
-                              new SnackBar(
-                                backgroundColor: Colors.purple,
-                                content: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    new Text(
-                                      "Note Deleted",
-                                      style: TextStyle(),
-                                    ),
-                                    deletedNoteHeading != null
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              print("undo");
-                                              print(deletedNoteHeading[index]);
-                                              setState(() {
-                                                var firebaseUser = FirebaseAuth
-                                                    .instance.currentUser;
-                                                firestoreInstance
-                                                    .collection("Users")
-                                                    .doc(firebaseUser.uid)
-                                                    .set(
-                                                        {
-                                                      "noteHeading":
-                                                          deletedNoteHeading,
-                                                      "noteDescription":
-                                                          deletedNoteDescription,
-                                                    },
-                                                        SetOptions(
-                                                            merge: true)).then(
-                                                        (_) {
-                                                  print("success!");
+                              Scaffold.of(context).showSnackBar(
+                                new SnackBar(
+                                  backgroundColor: Colors.purple,
+                                  content: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      new Text(
+                                        "Note Deleted",
+                                        style: TextStyle(),
+                                      ),
+                                      deletedNoteHeading != null
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                print("undo");
+                                                print(
+                                                    deletedNoteHeading[index]);
+                                                setState(() {
+                                                  var firebaseUser =
+                                                      FirebaseAuth
+                                                          .instance.currentUser;
+                                                  firestoreInstance
+                                                      .collection("Users")
+                                                      .doc(firebaseUser.uid)
+                                                      .set(
+                                                          {
+                                                        "noteHeading":
+                                                            deletedNoteHeading,
+                                                        "noteDescription":
+                                                            deletedNoteDescription,
+                                                      },
+                                                          SetOptions(
+                                                              merge:
+                                                                  true)).then(
+                                                          (_) {
+                                                    print("success!");
+                                                  });
+                                                  if (deletedNoteHeading !=
+                                                      null) {
+                                                    noteHeading.add(
+                                                        deletedNoteHeading[
+                                                            index]);
+                                                    noteDescription.add(
+                                                        deletedNoteDescription[
+                                                            index]);
+                                                  }
                                                 });
-                                                if (deletedNoteHeading !=
-                                                    null) {
-                                                  noteHeading.add(
-                                                      deletedNoteHeading[
-                                                          index]);
-                                                  noteDescription.add(
-                                                      deletedNoteDescription[
-                                                          index]);
-                                                }
-                                              });
-                                            },
-                                            child: new Text(
-                                              "Undo",
-                                              style: TextStyle(),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ],
+                                              },
+                                              child: new Text(
+                                                "Undo",
+                                                style: TextStyle(),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
+                              );
+                            },
+                          );
+                        } else {
+                          action = "Edit";
+                          setState(() {
+                            _settingModalBottomSheetUpdate(
+                                _scaffoldKey.currentContext, index);
+                          });
+                        }
                       },
                       background: ClipRRect(
                         borderRadius: BorderRadius.circular(5.5),
                         child: Container(
-                          color: Colors.green,
+                          color: Colors.red,
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -203,7 +282,7 @@ class _NotesWidgetState extends State<NotesWidget> {
                       secondaryBackground: ClipRRect(
                         borderRadius: BorderRadius.circular(5.5),
                         child: Container(
-                          color: Colors.red,
+                          color: Colors.green,
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Padding(
@@ -212,11 +291,11 @@ class _NotesWidgetState extends State<NotesWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.delete,
+                                    Icons.edit,
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    "Delete",
+                                    "Update",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ],
@@ -354,6 +433,115 @@ class _NotesWidgetState extends State<NotesWidget> {
       ),
     );
   }
+
+  // Widget noteListUpdate(int index) {
+  //   return ClipRRect(
+  //     borderRadius: BorderRadius.circular(5.5),
+  //     child: Container(
+  //       width: double.infinity,
+  //       decoration: BoxDecoration(
+  //         color: noteColor[(index % noteColor.length).floor()],
+  //         borderRadius: BorderRadius.circular(5.5),
+  //       ),
+  //       height: 150,
+  //       child: Center(
+  //         child: Row(
+  //           children: [
+  //             new Container(
+  //               color:
+  //                   noteMarginColor[(index % noteMarginColor.length).floor()],
+  //               width: 3.5,
+  //               height: double.infinity,
+  //             ),
+  //             Flexible(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+  //                 child: new Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                   children: [
+  //                     Flexible(
+  //                       child: FutureBuilder<DocumentSnapshot>(
+  //                           future: usersRef.doc(uid).get(),
+  //                           builder: (BuildContext context,
+  //                               AsyncSnapshot<DocumentSnapshot> snapshot) {
+  //                             if (snapshot.hasError) {
+  //                               return Text("Something went wrong");
+  //                             }
+  //                             if (snapshot.connectionState ==
+  //                                 ConnectionState.done) {
+  //                               Map<String, dynamic> data =
+  //                                   snapshot.data.data();
+  //                               return Text(
+  //                                 data['noteHeading'][index].toString(),
+  //                                 overflow: TextOverflow.ellipsis,
+  //                                 style: TextStyle(
+  //                                   fontSize: 20.00,
+  //                                   color: Colors.black,
+  //                                   fontWeight: FontWeight.w500,
+  //                                 ),
+  //                               );
+  //                             }
+  //                             return Container(
+  //                               color: Colors.transparent,
+  //                               child: Center(
+  //                                 child: SpinKitChasingDots(
+  //                                   color: Color(0xffFFD119),
+  //                                   size: 50,
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           }),
+  //                     ),
+  //                     SizedBox(
+  //                       height: 2.5,
+  //                     ),
+  //                     Flexible(
+  //                       child: Container(
+  //                         height: double.infinity,
+  //                         child: FutureBuilder<DocumentSnapshot>(
+  //                             future: usersRef.doc(uid).get(),
+  //                             builder: (BuildContext context,
+  //                                 AsyncSnapshot<DocumentSnapshot> snapshot) {
+  //                               if (snapshot.hasError) {
+  //                                 return Text("Something went wrong");
+  //                               }
+  //                               if (snapshot.connectionState ==
+  //                                   ConnectionState.done) {
+  //                                 Map<String, dynamic> data =
+  //                                     snapshot.data.data();
+  //                                 return AutoSizeText(
+  //                                   data['noteDescription'][index].toString(),
+  //                                   maxLines: 10,
+  //                                   overflow: TextOverflow.ellipsis,
+  //                                   style: TextStyle(
+  //                                     fontSize: 18.00,
+  //                                     color: Colors.black,
+  //                                   ),
+  //                                 );
+  //                               }
+  //                               return Container(
+  //                                 color: Colors.transparent,
+  //                                 child: Center(
+  //                                   child: SpinKitChasingDots(
+  //                                     color: Color(0xffFFD119),
+  //                                     size: 50,
+  //                                   ),
+  //                                 ),
+  //                               );
+  //                             }),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void getFirebaseNotesLength() {
     usersRef.doc(uid).get().then((value) {
@@ -495,6 +683,174 @@ class _NotesWidgetState extends State<NotesWidget> {
                             maxLines: notesDescriptionMaxLines,
                             maxLength: notesDescriptionMaxLenth,
                             controller: noteDescriptionController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Description',
+                              hintStyle: TextStyle(
+                                fontSize: 15.00,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            // ignore: missing_return
+                            validator: (String noteDescription) {
+                              if (noteDescription.isEmpty) {
+                                return "Please enter Note Desc";
+                              } else {
+                                if (noteDescription.startsWith(" ")) {
+                                  return "Please avoid whitespaces";
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _settingModalBottomSheetUpdate(context, int index) {
+    TextEditingController controllerHead =
+        TextEditingController(text: noteHeading[index]);
+    TextEditingController controllerDesc =
+        TextEditingController(text: noteDescription[index]);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      elevation: 50,
+      isDismissible: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
+        ),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      builder: (BuildContext bc) {
+        return Padding(
+          padding: EdgeInsets.only(left: 25, right: 25),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: (MediaQuery.of(context).size.height),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 250, top: 50),
+                  child: new Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "New Note",
+                            style: TextStyle(
+                              fontSize: 20.00,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              noteHeading.removeAt(index);
+                              noteDescription.removeAt(index);
+                              // List<String> tempNote;
+                              // List<String> tempDesc;
+                              // print(firebaseArrLength);
+
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  print("in gestrure detector on tap");
+                                  noteHeading.insert(
+                                      index, controllerHead.text);
+                                  noteDescription.insert(
+                                      index, controllerDesc.text);
+                                  controllerDesc.clear();
+                                  controllerHead.clear();
+                                  noteHeadingController.clear();
+                                  noteDescriptionController.clear();
+
+                                  // tempNote = List.from(noteHeading);
+                                  // tempDesc = List.from(noteDescription);
+                                });
+                                print(noteHeading);
+                                var firebaseUser =
+                                    FirebaseAuth.instance.currentUser;
+                                firestoreInstance
+                                    .collection("Users")
+                                    .doc(firebaseUser.uid)
+                                    .set({
+                                  "noteHeading": noteHeading,
+                                  "noteDescription": noteDescription,
+                                }, SetOptions(merge: true)).then((_) {
+                                  print("success!");
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      fontSize: 20.00,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Colors.blueAccent,
+                        thickness: 2.5,
+                      ),
+                      TextFormField(
+                        maxLength: notesHeaderMaxLenth,
+                        controller: controllerHead,
+                        decoration: InputDecoration(
+                          hintText: "Note Heading",
+                          hintStyle: TextStyle(
+                            fontSize: 15.00,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          prefixIcon: Icon(Icons.text_fields),
+                        ),
+                        // ignore: missing_return
+                        validator: (String noteHeading) {
+                          if (noteHeading.isEmpty) {
+                            return "Please enter Note Heading";
+                          } else if (noteHeading.startsWith(" ")) {
+                            return "Please avoid whitespaces";
+                          }
+                        },
+                        onFieldSubmitted: (String value) {
+                          FocusScope.of(context)
+                              .requestFocus(textSecondFocusNode);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Container(
+                          margin: EdgeInsets.all(1),
+                          height: 5 * 24.0,
+                          child: TextFormField(
+                            focusNode: textSecondFocusNode,
+                            maxLines: notesDescriptionMaxLines,
+                            maxLength: notesDescriptionMaxLenth,
+                            controller: controllerDesc,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Description',
