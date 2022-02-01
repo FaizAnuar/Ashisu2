@@ -545,7 +545,7 @@ class _TimetablePageState extends State<TimetablePage> {
         IconSlideAction(
           caption: "Done",
           color: taskColor[(index % taskColor.length).floor()],
-          icon: Icons.edit,
+          icon: Icons.fact_check,
           onTap: () {
             setState(() {
               if (urgency == 0) {

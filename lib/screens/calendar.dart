@@ -329,15 +329,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       ),
       secondaryActions: [
         IconSlideAction(
-          caption: "Edit",
-          color: Colors.white,
-          icon: Icons.edit,
-          onTap: () {},
-        ),
-        IconSlideAction(
           caption: "Delete",
           color: ReminderColor[(index % ReminderColor.length).floor()],
-          icon: Icons.edit,
+          icon: Icons.delete,
           onTap: () {
             setState(() {
               reminderHeading.removeAt(index);
