@@ -13,6 +13,7 @@ class _ProfileState extends State<Profile> {
   final usersRef = FirebaseFirestore.instance.collection('Users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uid = '';
+  String payload;
   @override
   void initState() {
     User user = _auth.currentUser;
@@ -79,6 +80,7 @@ class _ProfileState extends State<Profile> {
                     return Text("loading");
                   },
                 ),
+                Text(payload ?? ''),
                 SizedBox(
                   height: 50,
                 ),

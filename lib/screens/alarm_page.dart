@@ -144,7 +144,7 @@ class _AlarmPageState extends State<AlarmPage> {
                                 ],
                               ),
                               Text(
-                                'Mon-Fri',
+                                'Thursday',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'avenir',
@@ -345,7 +345,7 @@ class _AlarmPageState extends State<AlarmPage> {
     var alarmInfo = AlarmInfo(
       alarmDateTime: scheduleAlarmDateTime,
       gradientColorIndex: _currentAlarms.length,
-      title: 'alarm',
+      title: 'Check your task',
     );
     _alarmHelper.insertAlarm(alarmInfo);
     scheduleAlarm(scheduleAlarmDateTime, alarmInfo);
