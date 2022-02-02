@@ -322,8 +322,19 @@ class _SelectPageState extends State<SelectPage> {
                 ),
               ],
             ),
+            SizedBox(height: 50),
+            Text(
+              'User Guideline:',
+              style: TextStyle(color: Colors.purple, fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Image.asset(
+              "assets/technique.png",
+              width: 400.0,
+              height: 400.0,
+            ),
             SizedBox(
-              height: 20,
+              height: 30,
             ),
           ],
         ),
