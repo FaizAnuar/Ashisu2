@@ -34,7 +34,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   DateTime startTime;
   DateTime valu;
   final dateFormatter = DateFormat('dd MMMM yyyy');
-  final _timeFormat = DateFormat('HH:mm');
+  final timeFormat = DateFormat('HH:mm');
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(

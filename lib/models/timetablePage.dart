@@ -12,8 +12,8 @@ TextEditingController selectionController = new TextEditingController();
 FocusNode textSecondFocusNode = new FocusNode();
 
 int taskHeaderMaxLength = 25;
-int taskDescriptionMaxLines = 10;
-int taskDescriptionMaxLength;
+int taskDescriptionMaxLines = 1;
+int taskDescriptionMaxLength = 25;
 String deletedTaskHeading = "";
 String deletedTaskDescription = "";
 String deletedTaskTime = "";

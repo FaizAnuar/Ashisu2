@@ -150,7 +150,7 @@ class _newTaskState extends State<newTask> {
                             height: 10,
                           ),
                           Container(
-                            height: 150,
+                            height: 100,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.white,

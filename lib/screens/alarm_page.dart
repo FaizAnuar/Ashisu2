@@ -245,21 +245,24 @@ class _AlarmPageState extends State<AlarmPage> {
                                                         TextStyle(fontSize: 32),
                                                   ),
                                                 ),
-                                                ListTile(
-                                                  title: Text('Repeat'),
-                                                  trailing: Icon(
-                                                      Icons.arrow_forward_ios),
+                                                SizedBox(
+                                                  height: 30,
                                                 ),
-                                                ListTile(
-                                                  title: Text('Sound'),
-                                                  trailing: Icon(
-                                                      Icons.arrow_forward_ios),
-                                                ),
-                                                ListTile(
-                                                  title: Text('Title'),
-                                                  trailing: Icon(
-                                                      Icons.arrow_forward_ios),
-                                                ),
+                                                // ListTile(
+                                                //   title: Text('Repeat'),
+                                                //   trailing: Icon(
+                                                //       Icons.arrow_forward_ios),
+                                                // ),
+                                                // ListTile(
+                                                //   title: Text('Sound'),
+                                                //   trailing: Icon(
+                                                //       Icons.arrow_forward_ios),
+                                                // ),
+                                                // ListTile(
+                                                //   title: Text('Title'),
+                                                //   trailing: Icon(
+                                                //       Icons.arrow_forward_ios),
+                                                // ),
                                                 FloatingActionButton.extended(
                                                   onPressed: onSaveAlarm,
                                                   icon: Icon(Icons.alarm),
